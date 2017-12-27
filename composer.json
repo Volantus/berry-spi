@@ -1,0 +1,21 @@
+{
+    "name": "volantus/berry-spi",
+    "description": "PHP SPI extension for RaspberryPi",
+    "type": "library",
+    "license": "GNUv3",
+    "authors": [
+        {
+            "name": "Marius Meissner",
+            "email": "marius.messner@volantus.org"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "^6.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Volantus\\BerrySpi\\Tests\\": "tests"
+        }
+    }
+}
