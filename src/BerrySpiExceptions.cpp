@@ -9,10 +9,19 @@ zend_class_entry* BerrySpiExceptions::_gpioFailureException;
 
 void BerrySpiExceptions::prepare()
 {
-    registerException("Volantus\\BerrySPI\\InvalidArgumentException", &_invalidArgumentException);
-    registerException("Volantus\\BerrySPI\\GpioInitFailureException", &_gioInitFailureException);
-    registerException("Volantus\\BerrySPI\\LogicException", &_logicException);
-    registerException("Volantus\\BerrySPI\\GpioFailureException", &_gpioFailureException);
+    zend_class_entry classEntry;
+
+    INIT_CLASS_ENTRY(classEntry, "Volantus\\BerrySpi\\InvalidArgumentException", NULL);
+    _invalidArgumentException = zend_register_internal_class_ex(&classEntry, zend_exception_get_default());
+
+    INIT_CLASS_ENTRY(classEntry, "Volantus\\BerrySpi\\GpioInitFailureException", NULL);
+    _gioInitFailureException = zend_register_internal_class_ex(&classEntry, zend_exception_get_default());
+
+    INIT_CLASS_ENTRY(classEntry, "Volantus\\BerrySpi\\LogicException", NULL);
+    _logicException = zend_register_internal_class_ex(&classEntry, zend_exception_get_default());
+
+    INIT_CLASS_ENTRY(classEntry, "Volantus\\BerrySpI\\GpioFailureException", NULL);
+    _gpioFailureException = zend_register_internal_class_ex(&classEntry, zend_exception_get_default());
 }
 
 void BerrySpiExceptions::registerException(const char* name, zend_class_entry **memberClassEntry)
