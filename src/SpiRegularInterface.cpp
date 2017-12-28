@@ -115,6 +115,23 @@ Php::Value SpiRegularInterface::read(Php::Parameters &params) const
     return handleTransferResult(rc, count + 1, count, inBuffer);
 }
 
+int SpiRegularInterface::write(Php::Parameters &params) const
+{
+    CHECK_IF_OPEN
+
+    std::string data = params[0];
+    char * outBuffer = new char[data.size() + 1];
+    std::copy(data.begin(), data.end(), outBuffer);
+    outBuffer[data.size()] = '\0';
+
+    unsigned count = data.length();
+    char inBuffer[0];
+
+    int rc = spiWrite(handle, outBuffer, count);
+    handleTransferResult(rc, (int) data.size(), count, inBuffer);
+    return 1;
+}
+
 Php::Value SpiRegularInterface::isOpen() const
 {
     return handle != -1;

@@ -76,11 +76,21 @@ class RegularInterface
 
     /**
      * Reads count bytes of data from the SPI device
+     *
      * @param int $count Count of bytes to read
      *
      * @return string data read by the SPI device
      */
     public function read(int $count): string
+    {
+    }
+
+    /**
+     * Sends data to the SPI device
+     *
+     * @param string $data
+     */
+    public function write(string $data)
     {
     }
 }

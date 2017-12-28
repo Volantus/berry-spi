@@ -10,7 +10,7 @@ extern "C" {
      */
     PHPCPP_EXPORT void *get_module() 
     {
-        static Php::Extension extension("berry-spi", "0.1");
+        static Php::Extension extension("berry-spi", "0.0.1");
         Php::Class<SpiRegularInterface> regularInterface("Volantus\\BerrySpi\\RegularInterface");
         regularInterface.method<&SpiRegularInterface::__construct> ("__construct", {
             Php::ByVal("channel", Php::Type::Numeric, true),
@@ -29,7 +29,9 @@ extern "C" {
         regularInterface.method<&SpiRegularInterface::read> ("read", {
             Php::ByVal("count", Php::Type::Numeric, true)
         });
-
+        regularInterface.method<&SpiRegularInterface::transfer> ("write", {
+            Php::ByVal("data", Php::Type::String, true)
+        });
 
         extension.add(std::move(regularInterface));
 

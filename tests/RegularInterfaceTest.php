@@ -149,6 +149,16 @@ class RegularInterfaceTest extends TestCase
         $interface->read(-3);
     }
 
+    /**
+     * @expectedException \Volantus\BerrySpi\LogicException
+     * @expectedExceptionMessage Unable to transfer data via an unestablished device connection
+     */
+    public function test_write_noOpen()
+    {
+        $interface = new RegularInterface(1, 32000, 0);
+        $interface->write('abc');
+    }
+
     public function test_getChannel_correct()
     {
         $interface = new RegularInterface(2, 32000, 0);

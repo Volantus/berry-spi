@@ -36,6 +36,7 @@ public:
     void close();
     Php::Value transfer(Php::Parameters &params) const;
     Php::Value read(Php::Parameters &params) const;
+    int write(Php::Parameters &params) const;
 
     Php::Value getChannel() const;
     Php::Value getSpeed() const;
