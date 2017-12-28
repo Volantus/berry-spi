@@ -54,6 +54,13 @@ class RegularInterface
     public function getFlags(): int
     {
     }
+
+    /**
+     * @return bool True if SPI device connection is open
+     */
+    public function isOpen(): bool
+    {
+    }
 }
 
 /**

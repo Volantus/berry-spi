@@ -20,6 +20,7 @@ extern "C" {
         regularInterface.method<&SpiRegularInterface::getChannel> ("getChannel");
         regularInterface.method<&SpiRegularInterface::getSpeed> ("getSpeed");
         regularInterface.method<&SpiRegularInterface::getFlags> ("getFlags");
+        regularInterface.method<&SpiRegularInterface::isOpen> ("isOpen");
         regularInterface.method<&SpiRegularInterface::open> ("open");
         regularInterface.method<&SpiRegularInterface::close> ("close");
 

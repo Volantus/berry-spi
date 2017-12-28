@@ -36,4 +36,5 @@ public:
     Php::Value getChannel() const;
     Php::Value getSpeed() const;
     Php::Value getFlags() const;
+    Php::Value isOpen() const;
 };

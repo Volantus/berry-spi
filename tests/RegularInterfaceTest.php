@@ -79,6 +79,33 @@ class RegularInterfaceTest extends TestCase
         $interface->open();
     }
 
+    public function test_close_deviceOpened()
+    {
+        $interface = new RegularInterface(1, 32000, 0);
+        $interface->open();
+
+        self::assertTrue($interface->isOpen());
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\LogicException
+     * @expectedExceptionMessage Unable to close an unestablished device connection
+     */
+    public function test_close_notOpen()
+    {
+        $interface = new RegularInterface(1, 32000, 0);
+        $interface->close();
+    }
+
+    public function test_close_deviceClosed()
+    {
+        $interface = new RegularInterface(1, 32000, 0);
+        $interface->open();
+        $interface->close();
+
+        self::assertFalse($interface->isOpen());
+    }
+
     public function test_getChannel_correct()
     {
         $interface = new RegularInterface(2, 32000, 0);
@@ -95,5 +122,11 @@ class RegularInterfaceTest extends TestCase
     {
         $interface = new RegularInterface(2, 32000, 16);
         self::assertEquals(16, $interface->getFlags());
+    }
+
+    public function test_isOpen_closedByDefault()
+    {
+        $interface = new RegularInterface(2, 32000, 16);
+        self::assertFalse($interface->isOpen());
     }
 }

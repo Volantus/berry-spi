@@ -52,7 +52,7 @@ void SpiRegularInterface::open()
     } else if (rc == PI_SPI_OPEN_FAILED) {
         BerrySpiExceptions::GpioFailureException("Opening SPI device failed => unknown error while opening device (PI_SPI_OPEN_FAILED)"); return;
     } else {
-        std::string message = "Opening SPI device failed => unknown RC " + std::to_string(rc) + " given ";
+        std::string message = "Opening SPI device failed => unknown RC " + std::to_string(rc) + " returned by spiOpen";
         BerrySpiExceptions::RuntimeException(message.c_str()); return;
     }
 }
@@ -63,6 +63,22 @@ void SpiRegularInterface::close()
         BerrySpiExceptions::LogicException("Unable to close an unestablished device connection");
         return;
     }
+
+    int rc = spiClose(handle);
+
+    if (rc == 0) {
+        handle = -1;
+    } else if (rc == PI_BAD_HANDLE) {
+        BerrySpiExceptions::GpioFailureException("Closing SPI device failed => bad handle (PI_BAD_HANDLE)"); return;
+    } else if (rc != 0) {
+        std::string message = "Closing SPI device failed => unknown RC " + std::to_string(rc) + " returned by spiClose";
+        BerrySpiExceptions::RuntimeException(message.c_str()); return;
+    }
+}
+
+Php::Value SpiRegularInterface::isOpen() const
+{
+    return handle != -1;
 }
 
 Php::Value SpiRegularInterface::getChannel() const { return (int16_t) channel; }
