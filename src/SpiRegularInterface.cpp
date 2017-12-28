@@ -21,6 +21,7 @@ void SpiRegularInterface::__construct(Php::Parameters &params)
     channel = _channel;
     speed = _speed;
     flags = _flags;
+    handle = -1;
 
     if (BerrySpiState::getPigpioInitRc() < 0) {
         std::string message = "Pigpio initialization failed with RC=";
@@ -32,6 +33,28 @@ void SpiRegularInterface::__construct(Php::Parameters &params)
 
 void SpiRegularInterface::open()
 {
+    if (handle != -1) {
+        BerrySpiExceptions::LogicException("SPI device is already opened"); return;
+    }
+
+    int rc = spiOpen(channel, speed, flags);
+
+    if (rc >= 0) {
+        handle = rc;
+    } else if (rc == PI_BAD_SPI_CHANNEL) {
+        BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid channel given (PI_BAD_SPI_CHANNEL)"); return;
+    } else if (rc == PI_BAD_SPI_SPEED) {
+        BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid speed given (PI_BAD_SPI_SPEED)"); return;
+    } else if (rc == PI_BAD_FLAGS) {
+        BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid flags given (PI_BAD_FLAGS)"); return;
+    } else if (rc == PI_NO_AUX_SPI) {
+        BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => no aux (PI_NO_AUX_SPI)"); return;
+    } else if (rc == PI_SPI_OPEN_FAILED) {
+        BerrySpiExceptions::GpioFailureException("Opening SPI device failed => unknown error while opening device (PI_SPI_OPEN_FAILED)"); return;
+    } else {
+        std::string message = "Opening SPI device failed => unknown RC " + std::to_string(rc) + " given ";
+        BerrySpiExceptions::RuntimeException(message.c_str()); return;
+    }
 }
 
 void SpiRegularInterface::close()

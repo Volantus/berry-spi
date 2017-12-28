@@ -9,6 +9,7 @@ private:
     static zend_class_entry* _gioInitFailureException;
     static zend_class_entry* _logicException;
     static zend_class_entry* _gpioFailureException;
+    static zend_class_entry* _runtimeException;
     static void registerException(const char* name, zend_class_entry **memberClassEntry);
 
 public:
@@ -17,4 +18,5 @@ public:
     static void GpioInitFailureException(const char* message);
     static void LogicException(const char* message);
     static void GpioFailureException(const char* message);
+    static void RuntimeException(const char* message);
 };

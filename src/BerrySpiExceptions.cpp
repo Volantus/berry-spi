@@ -6,6 +6,7 @@ zend_class_entry* BerrySpiExceptions::_gioInitFailureException;
 zend_class_entry* BerrySpiExceptions::_invalidArgumentException;
 zend_class_entry* BerrySpiExceptions::_logicException;
 zend_class_entry* BerrySpiExceptions::_gpioFailureException;
+zend_class_entry* BerrySpiExceptions::_runtimeException;
 
 void BerrySpiExceptions::prepare()
 {
@@ -22,6 +23,9 @@ void BerrySpiExceptions::prepare()
 
     INIT_CLASS_ENTRY(classEntry, "Volantus\\BerrySpI\\GpioFailureException", NULL);
     _gpioFailureException = zend_register_internal_class_ex(&classEntry, zend_exception_get_default());
+
+    INIT_CLASS_ENTRY(classEntry, "Volantus\\BerrySpI\\RuntimeException", NULL);
+    _runtimeException = zend_register_internal_class_ex(&classEntry, zend_exception_get_default());
 }
 
 void BerrySpiExceptions::registerException(const char* name, zend_class_entry **memberClassEntry)
@@ -49,4 +53,9 @@ void BerrySpiExceptions::LogicException(const char *message)
 void BerrySpiExceptions::GpioFailureException(const char *message)
 {
     zend_throw_exception_ex(_gpioFailureException, 0, message, __FILE__, __LINE__);
+}
+
+void BerrySpiExceptions::RuntimeException(const char *message)
+{
+    zend_throw_exception_ex(_runtimeException, 0, message, __FILE__, __LINE__);
 }
