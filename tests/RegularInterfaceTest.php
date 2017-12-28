@@ -128,6 +128,27 @@ class RegularInterfaceTest extends TestCase
         self::assertEquals('abc', $readData, 'Check if SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) are connected properly');
     }
 
+    /**
+     * @expectedException \Volantus\BerrySpi\LogicException
+     * @expectedExceptionMessage Unable to transfer data via an unestablished device connection
+     */
+    public function test_read_noOpen()
+    {
+        $interface = new RegularInterface(1, 32000, 0);
+        $interface->read(3);
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage No negative values allowed for <count> parameter
+     */
+    public function test_read_negativeCountGiven()
+    {
+        $interface = new RegularInterface(1, 32000, 0);
+        $interface->open();
+        $interface->read(-3);
+    }
+
     public function test_getChannel_correct()
     {
         $interface = new RegularInterface(2, 32000, 0);

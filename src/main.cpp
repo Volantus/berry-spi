@@ -26,6 +26,10 @@ extern "C" {
         regularInterface.method<&SpiRegularInterface::transfer> ("transfer", {
             Php::ByVal("data", Php::Type::String, true)
         });
+        regularInterface.method<&SpiRegularInterface::read> ("read", {
+            Php::ByVal("count", Php::Type::Numeric, true)
+        });
+
 
         extension.add(std::move(regularInterface));
 

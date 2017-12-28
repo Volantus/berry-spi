@@ -25,6 +25,8 @@ private:
      */
     unsigned flags;
 
+    Php::Value handleTransferResult(int rc, int dataSize, unsigned transferCount, char inBuffer[]) const;
+
 public:
     SpiRegularInterface() = default;
     virtual ~SpiRegularInterface() = default;
@@ -33,6 +35,7 @@ public:
     void open();
     void close();
     Php::Value transfer(Php::Parameters &params) const;
+    Php::Value read(Php::Parameters &params) const;
 
     Php::Value getChannel() const;
     Php::Value getSpeed() const;

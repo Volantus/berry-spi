@@ -66,11 +66,21 @@ class RegularInterface
      * Transfers data to SPI device.
      * Simultaneously same byte count of data is read from the device and returned.
      *
-     * @param string $data  Data to send to device
+     * @param string $data Data to send to device
      *
-     * @return string
+     * @return string data received by the SPI device
      */
     public function transfer(string $data): string
+    {
+    }
+
+    /**
+     * Reads count bytes of data from the SPI device
+     * @param int $count Count of bytes to read
+     *
+     * @return string data read by the SPI device
+     */
+    public function read(int $count): string
     {
     }
 }
