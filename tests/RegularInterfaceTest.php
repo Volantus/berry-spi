@@ -106,6 +106,28 @@ class RegularInterfaceTest extends TestCase
         self::assertFalse($interface->isOpen());
     }
 
+    /**
+     * @expectedException \Volantus\BerrySpi\LogicException
+     * @expectedExceptionMessage Unable to transfer data via an unestablished device connection
+     */
+    public function test_transfer_notOpened()
+    {
+        $interface = new RegularInterface(1, 32000, 0);
+        $interface->transfer('abc');
+    }
+
+    /**
+     * For this test SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) pins needs to be connected (e.g. jumper cable)
+     */
+    public function test_transfer_dataSendIsRead()
+    {
+        $interface = new RegularInterface(1, 32000, 0);
+        $interface->open();
+        $readData = $interface->transfer('abc');
+
+        self::assertEquals('abc', $readData, 'Check if SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) are connected properly');
+    }
+
     public function test_getChannel_correct()
     {
         $interface = new RegularInterface(2, 32000, 0);

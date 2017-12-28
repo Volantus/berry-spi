@@ -69,10 +69,42 @@ void SpiRegularInterface::close()
     if (rc == 0) {
         handle = -1;
     } else if (rc == PI_BAD_HANDLE) {
-        BerrySpiExceptions::GpioFailureException("Closing SPI device failed => bad handle (PI_BAD_HANDLE)"); return;
+        BerrySpiExceptions::RuntimeException("Closing SPI device failed => bad handle (PI_BAD_HANDLE)"); return;
     } else if (rc != 0) {
         std::string message = "Closing SPI device failed => unknown RC " + std::to_string(rc) + " returned by spiClose";
         BerrySpiExceptions::RuntimeException(message.c_str()); return;
+    }
+}
+
+Php::Value SpiRegularInterface::transfer(Php::Parameters &params) const
+{
+    if (handle == -1) {
+        BerrySpiExceptions::LogicException("Unable to transfer data via an unestablished device connection");
+        return -1;
+    }
+
+    std::string data = params[0];
+    char * outBuffer = new char[data.size() + 1];
+    std::copy(data.begin(), data.end(), outBuffer);
+    outBuffer[data.size()] = '\0';
+
+    unsigned count = data.length();
+    char inBuffer[data.length()];
+
+    int rc = spiXfer(handle, outBuffer, (char *)inBuffer, count);
+
+    if (rc >= 0) {
+        inBuffer[data.size()] = '\0';
+        return (char *) inBuffer;
+    } else if (rc == PI_BAD_HANDLE) {
+        BerrySpiExceptions::RuntimeException("Transferring data failed  => bad handle (PI_BAD_HANDLE)"); return -1;
+    } else if (rc == PI_BAD_SPI_COUNT) {
+        BerrySpiExceptions::RuntimeException("Transferring data failed  => bad spi count (PI_BAD_SPI_COUNT)"); return -1;
+    } else if (rc == PI_SPI_XFER_FAILED) {
+        BerrySpiExceptions::RuntimeException("Transferring data failed  => unknown error (PI_SPI_XFER_FAILED)"); return -1;
+    } else {
+        std::string message = "Transferring data failed=> invalid RC " + std::to_string(rc) + " returned by spiXfer, expected" + std::to_string((int16_t) count);
+        BerrySpiExceptions::RuntimeException(message.c_str()); return -1;
     }
 }
 

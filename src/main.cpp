@@ -23,6 +23,9 @@ extern "C" {
         regularInterface.method<&SpiRegularInterface::isOpen> ("isOpen");
         regularInterface.method<&SpiRegularInterface::open> ("open");
         regularInterface.method<&SpiRegularInterface::close> ("close");
+        regularInterface.method<&SpiRegularInterface::transfer> ("transfer", {
+            Php::ByVal("data", Php::Type::String, true)
+        });
 
         extension.add(std::move(regularInterface));
 

@@ -61,6 +61,18 @@ class RegularInterface
     public function isOpen(): bool
     {
     }
+
+    /**
+     * Transfers data to SPI device.
+     * Simultaneously same byte count of data is read from the device and returned.
+     *
+     * @param string $data  Data to send to device
+     *
+     * @return string
+     */
+    public function transfer(string $data): string
+    {
+    }
 }
 
 /**

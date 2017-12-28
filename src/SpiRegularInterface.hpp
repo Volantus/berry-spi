@@ -32,6 +32,7 @@ public:
     void __construct(Php::Parameters &params);
     void open();
     void close();
+    Php::Value transfer(Php::Parameters &params) const;
 
     Php::Value getChannel() const;
     Php::Value getSpeed() const;
