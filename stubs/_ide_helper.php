@@ -130,3 +130,12 @@ class LogicException extends \Exception
 class GpioFailureException extends \Exception
 {
 }
+
+/**
+ * Class GpioFailureException
+ *
+ * @package Volantus\BerrySpi
+ */
+class RuntimeException extends \Exception
+{
+}

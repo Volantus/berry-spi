@@ -57,7 +57,7 @@ void SpiRegularInterface::open()
     } else if (rc == PI_NO_AUX_SPI) {
         BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => no aux (PI_NO_AUX_SPI)"); return;
     } else if (rc == PI_SPI_OPEN_FAILED) {
-        BerrySpiExceptions::GpioFailureException("Opening SPI device failed => unknown error while opening device (PI_SPI_OPEN_FAILED)"); return;
+        BerrySpiExceptions::RuntimeException("Opening SPI device failed => unknown error while opening device (PI_SPI_OPEN_FAILED)"); return;
     } else {
         std::string message = "Opening SPI device failed => unknown RC " + std::to_string(rc) + " returned by spiOpen";
         BerrySpiExceptions::RuntimeException(message.c_str()); return;
