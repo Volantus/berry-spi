@@ -17,7 +17,7 @@ cd /usr/lib/php/$(php -v | grep -i 'PHP [57]' | cut -c1-8 | sed s/'PHP '//g | cu
 wget https://github.com/Volantus/berry-spi/releases/download/0.0.1/berry-spi.so
 sudo echo "extension=berry-spi.so" >> /etc/php/7.0/cli/php.ini
 ```
-## Compile on your own
+## Compile from source
 Please make sure you installed the PHP-CPP library ([guide](http://www.php-cpp.com/documentation/install)) + pigpio ([Guide](http://abyz.me.uk/rpi/pigpio/download.html)).
 Clone and compile the source code:
 ```bash
