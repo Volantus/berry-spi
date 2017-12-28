@@ -18,8 +18,8 @@ wget https://github.com/Volantus/berry-spi/releases/download/0.0.1/berry-spi.so
 sudo echo "extension=berry-spi.so" >> /etc/php/7.0/cli/php.ini
 ```
 ## Compile on your own
-Please make sure you installed the PHP-CPP library ([guide](http://www.php-cpp.com/documentation/install)) + pigpio ([Guide](http://abyz.me.uk/rpi/pigpio/download.html)) .
-Then simply clone and compile the source code:
+Please make sure you installed the PHP-CPP library ([guide](http://www.php-cpp.com/documentation/install)) + pigpio ([Guide](http://abyz.me.uk/rpi/pigpio/download.html)).
+Clone and compile the source code:
 ```bash
 git clone https://github.com/Volantus/berry-spi
 cd berry-spi
@@ -53,7 +53,7 @@ Communication is handled by the RegularInterface class. (Implementation of BitBa
 ```
 
 ## Parameters
-The constructor accept three types parameters
+The constructor accept three parameters
 
 | Parameter     | Description                                                                             |
 | ------------- |-----------------------------------------------------------------------------------------|
@@ -103,7 +103,19 @@ All errors are wrapped in exceptions within the namespace Volantus\BerrySpi
   * In case of deeper unknown errors (e.g. PI_BAD_SPI_COUNT)
   
 # Contribution
-Contribution in form of bug reports, suggestions or pull requests are highly welcome :).
+Contribution in form of bug reports, suggestions or pull requests is highly welcome!
+## Executing the unit tests
+For some tests SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) pins needs to be connected (e.g. by jumper cable).
+
+All tests are managed by PHPUnit:
+```Bash
+    # Install PHPUnit if not already done
+    composer install
+    
+    # Execution of the tests (sudo is required by pigpio)
+    sudo vendor/phpunit/phpunit/phpunit 
+```
+
 
 
 
