@@ -10,7 +10,7 @@ void SpiRegularInterface::__construct(Php::Parameters &params)
 {
     if (!constructBaseParameters(params[1], params[2])) {return;};
 
-    int _channel = params[1];
+    int _channel = params[0];
     if (_channel < 0) {BerrySpiExceptions::InvalidArgumentException("No negative values allowed for <channel> parameter"); return;}
     channel = _channel;
 }
