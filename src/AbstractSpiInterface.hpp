@@ -25,19 +25,19 @@ protected:
     *   Executes the real commands for opening the device connection.
     *   Has to return the pigpio return code
     */
-    virtual int openDevice();
+    virtual int openDevice() = 0;
 
     /**
     *   Executes the real commands for closing the device connection.
     *   Has to return the pigpio return code
     */
-    virtual int closeDevice();
+    virtual int closeDevice() = 0;
 
     /**
     *   Executes the real commands for device cross (read + write) transfer.
     *   Has to return the pigpio return code
     */
-    virtual int crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount);
+    virtual int crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount) = 0;
 
 public:
     AbstractSpiInterface() = default;
