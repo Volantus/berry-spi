@@ -22,16 +22,16 @@ public:
     virtual ~SpiRegularInterface() = default;
 
     void __construct(Php::Parameters &params);
-    void open();
-    void close();
-    Php::Value transfer(Php::Parameters &params);
     Php::Value read(Php::Parameters &params);
     int write(Php::Parameters &params);
-
     Php::Value getChannel() const;
-    Php::Value getSpeed() const;
-    Php::Value getFlags() const;
-    Php::Value isOpen() const;
+
+    void open() {AbstractSpiInterface::open();};
+    void close() {AbstractSpiInterface::close();};
+    Php::Value transfer(Php::Parameters &params) {return AbstractSpiInterface::transfer(params);};
+    Php::Value getSpeed() const {return AbstractSpiInterface::getSpeed();};
+    Php::Value getFlags() const {return AbstractSpiInterface::getFlags();};
+    Php::Value isOpen() const {return AbstractSpiInterface::isOpen();};
 };
 
 #endif
