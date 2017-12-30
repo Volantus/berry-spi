@@ -1,4 +1,4 @@
-# Berry SPI PHP extension
+# Raspberry Pi SPI PHP extension
 Native PHP extension for SPI communication on RaspberryPi.
 
 Extension is still in alpha state. Please don't hesitate to report bugs, make suggestions or ask questions.

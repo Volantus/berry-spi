@@ -2,6 +2,7 @@
 #include <pigpio.h>
 #include "BerrySpiState.hpp"
 #include "BerrySpiExceptions.hpp"
+#include "AbstractSpiInterface.hpp"
 #include "SpiRegularInterface.hpp"
 
 extern "C" {

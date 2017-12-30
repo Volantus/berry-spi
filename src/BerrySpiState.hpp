@@ -1,3 +1,6 @@
+#ifndef BERRY_SPI_STAGE_H
+#define BERRY_SPI_STAGE_H
+
 class BerrySpiState
 {
 private:
@@ -8,3 +11,5 @@ public:
     static void cleanDependencies();
     static int getPigpioInitRc();
 };
+
+#endif

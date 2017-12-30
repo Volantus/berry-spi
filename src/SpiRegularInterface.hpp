@@ -1,31 +1,21 @@
-class SpiRegularInterface : public Php::Base
+#include "AbstractSpiInterface.hpp"
+
+#ifndef SPI_REGULAR_INTERFACE_H
+#define SPI_REGULAR_INTERFACE_H
+
+class SpiRegularInterface: public AbstractSpiInterface
 {
 private:
-    /**
-     *  Handle for the device at the address on the SPI bus.
-     *  @var    unsigned
-     */
-    int handle = -1;
-
     /**
      *  A SPI channel, 0-2.
      *  @var    unsigned
      */
     unsigned channel;
 
-    /**
-     *  The speed of serial communication in bits per second.
-     *  @var    unsigned
-     */
-    unsigned speed;
-
-    /**
-     *  Consists of the least significant 22 bits.
-     *  @var    unsigned
-     */
-    unsigned flags;
-
-    Php::Value handleTransferResult(int rc, int dataSize, unsigned transferCount, char inBuffer[]) const;
+protected:
+    virtual int openDevice();
+    virtual int closeDevice();
+    virtual int crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount);
 
 public:
     SpiRegularInterface() = default;
@@ -34,12 +24,14 @@ public:
     void __construct(Php::Parameters &params);
     void open();
     void close();
-    Php::Value transfer(Php::Parameters &params) const;
-    Php::Value read(Php::Parameters &params) const;
-    int write(Php::Parameters &params) const;
+    Php::Value transfer(Php::Parameters &params);
+    Php::Value read(Php::Parameters &params);
+    int write(Php::Parameters &params);
 
     Php::Value getChannel() const;
     Php::Value getSpeed() const;
     Php::Value getFlags() const;
     Php::Value isOpen() const;
 };
+
+#endif

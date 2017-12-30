@@ -2,6 +2,9 @@
 #include <Zend/zend_exceptions.h>
 #include <Zend/zend_API.h>
 
+#ifndef BERRY_SPI_EXCEPTIONS_H
+#define BERRY_SPI_EXCEPTIONS_H
+
 class BerrySpiExceptions
 {
 private:
@@ -20,3 +23,5 @@ public:
     static void GpioFailureException(const char* message);
     static void RuntimeException(const char* message);
 };
+
+#endif
