@@ -96,6 +96,109 @@ class RegularInterface
 }
 
 /**
+ * Class BitBangingInterface
+ *
+ * @package Volantus\BerrySpi
+ */
+class BitBangingInterface
+{
+    /**
+     * SPIInterface constructor.
+     *
+     * @param int $csPin   The GPIO (0-31) used for the slave select signal
+     * @param int $misoPin The GPIO (0-31) used for the MISO signal
+     * @param int $mosiPin The GPIO (0-31) used for the MOSI signal
+     * @param int $sclkPin The GPIO (0-31) used for the SCLK signal
+     * @param int $speed   Baud speed in bits per second (50-250000)
+     * @param int $flags   Additional flags
+     *
+     * @internal param int $channel Regular SPI channel (0 or 1)
+     */
+    public function __construct(int $csPin, int $misoPin, int $mosiPin, int $sclkPin, int $speed, int $flags)
+    {
+        $this->csPin = $csPin;
+        $this->misoPin = $misoPin;
+        $this->mosiPin = $mosiPin;
+        $this->sclkPin = $sclkPin;
+    }
+
+    /**
+     * @return void
+     */
+    public function open()
+    {
+    }
+
+    /**
+     * @return void
+     */
+    public function close()
+    {
+    }
+
+    /**
+     * @return int
+     */
+    public function getCsPin(): int
+    {
+    }
+
+    /**
+     * @return int
+     */
+    public function getMosiPin(): int
+    {
+    }
+
+    /**
+     * @return int
+     */
+    public function getMisoPin(): int
+    {
+    }
+
+    /**
+     * @return int
+     */
+    public function getSclkPin(): int
+    {
+    }
+
+    /**
+     * @return int
+     */
+    public function getSpeed(): int
+    {
+    }
+
+    /**
+     * @return int
+     */
+    public function getFlags(): int
+    {
+    }
+
+    /**
+     * @return bool True if SPI device connection is open
+     */
+    public function isOpen(): bool
+    {
+    }
+
+    /**
+     * Transfers data to SPI device.
+     * Simultaneously same byte count of data is read from the device and returned.
+     *
+     * @param string $data Data to send to device
+     *
+     * @return string data received by the SPI device
+     */
+    public function transfer(string $data): string
+    {
+    }
+}
+
+/**
  * Class InvalidArgumentException
  *
  * @package Volantus\BerrySpi

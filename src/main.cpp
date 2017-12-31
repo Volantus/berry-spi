@@ -4,6 +4,7 @@
 #include "BerrySpiExceptions.hpp"
 #include "AbstractSpiInterface.hpp"
 #include "SpiRegularInterface.hpp"
+#include "SpiBitBangingInterface.hpp"
 
 extern "C" {
     /**
@@ -35,6 +36,31 @@ extern "C" {
         });
 
         extension.add(std::move(regularInterface));
+
+
+        Php::Class<SpiBitBangingInterface> bitBangingInterface("Volantus\\BerrySpi\\BitBangingInterface");
+        bitBangingInterface.method<&SpiBitBangingInterface::__construct> ("__construct", {
+            Php::ByVal("csPin", Php::Type::Numeric, true),
+            Php::ByVal("misoPin", Php::Type::Numeric, true),
+            Php::ByVal("mosiPin", Php::Type::Numeric, true),
+            Php::ByVal("sclkPin", Php::Type::Numeric, true),
+            Php::ByVal("speed", Php::Type::Numeric, true),
+            Php::ByVal("flags", Php::Type::Numeric, true),
+        });
+        bitBangingInterface.method<&SpiBitBangingInterface::getCsPin> ("getCsPin");
+        bitBangingInterface.method<&SpiBitBangingInterface::getMisoPin> ("getMisoPin");
+        bitBangingInterface.method<&SpiBitBangingInterface::getMosiPin> ("getMosiPin");
+        bitBangingInterface.method<&SpiBitBangingInterface::getSclkPin> ("getSclkPin");
+        bitBangingInterface.method<&SpiBitBangingInterface::getSpeed> ("getSpeed");
+        bitBangingInterface.method<&SpiBitBangingInterface::getFlags> ("getFlags");
+        bitBangingInterface.method<&SpiBitBangingInterface::isOpen> ("isOpen");
+        bitBangingInterface.method<&SpiBitBangingInterface::open> ("open");
+        bitBangingInterface.method<&SpiBitBangingInterface::close> ("close");
+        bitBangingInterface.method<&SpiBitBangingInterface::transfer> ("transfer", {
+            Php::ByVal("data", Php::Type::String, true)
+        });
+
+        extension.add(std::move(bitBangingInterface));
 
         extension.onStartup([]() {
             BerrySpiState::initDependencies();
