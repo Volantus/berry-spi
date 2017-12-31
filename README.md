@@ -40,10 +40,10 @@ Communication is handled by the RegularInterface class. (Implementation of BitBa
     $interface->open();
     
     // Sending + retrieving data simustanisly
-    $receivedData = $interface->transfer(0x1269493);
+    $retrievedData = $interface->transfer(0x1269493);
     
     // Just reading data
-    $receivedData = $interface->read(8);
+    $retrievedData = $interface->read(8);
         
     // Just sending data
     $interface->write('abc');
