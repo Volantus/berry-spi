@@ -11,7 +11,7 @@ extern "C" {
      */
     PHPCPP_EXPORT void *get_module() 
     {
-        static Php::Extension extension("berry-spi", "0.0.1");
+        static Php::Extension extension("berry-spi", "0.0.2");
         Php::Class<SpiRegularInterface> regularInterface("Volantus\\BerrySpi\\RegularInterface");
         regularInterface.method<&SpiRegularInterface::__construct> ("__construct", {
             Php::ByVal("channel", Php::Type::Numeric, true),
