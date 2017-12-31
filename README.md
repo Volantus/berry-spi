@@ -42,7 +42,7 @@ $interface->open();
 // Sending + retrieving data simustanisly
 $retrievedData = $interface->transfer(0x1269493);
 
-// Just reading data
+// Reading 8 bytes of data
 $retrievedData = $interface->read(8);
     
 // Just sending data
