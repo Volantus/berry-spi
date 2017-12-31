@@ -32,24 +32,24 @@ sudo make install
 Communication is handled by the RegularInterface class. (Implementation of BitBanging is planned for the near future)
 
 ```PHP
-    use Volantus\BerrySpi\RegularInterface;
+use Volantus\BerrySpi\RegularInterface;
+
+$interface = new RegularInterface(1, 32768, 0);
+
+// Opening the connection
+$interface->open();
+
+// Sending + retrieving data simustanisly
+$retrievedData = $interface->transfer(0x1269493);
+
+// Just reading data
+$retrievedData = $interface->read(8);
     
-    $interface = new RegularInterface(1, 32768, 0);
-    
-    // Opening the connection
-    $interface->open();
-    
-    // Sending + retrieving data simustanisly
-    $retrievedData = $interface->transfer(0x1269493);
-    
-    // Just reading data
-    $retrievedData = $interface->read(8);
-        
-    // Just sending data
-    $interface->write('abc');
-    
-    // Don't forget to close the connection
-    $interface->close();
+// Just sending data
+$interface->write('abc');
+
+// Don't forget to close the connection
+$interface->close();
 ```
 
 ## Parameters
