@@ -4,6 +4,7 @@
 #include "BerrySpiState.hpp"
 #include "BerrySpiExceptions.hpp"
 #include "AbstractSpiInterface.hpp"
+#include "DeviceInteractionResult.hpp"
 #include "SpiBitBangingInterface.hpp"
 
 void SpiBitBangingInterface::__construct(Php::Parameters &params)
@@ -26,22 +27,19 @@ void SpiBitBangingInterface::__construct(Php::Parameters &params)
     sclkPin = _sclkPin;
 }
 
-int SpiBitBangingInterface::openDevice()
+DeviceInteractionResult* SpiBitBangingInterface::openDevice()
 {
-    // ToDo: Implement real device logic
-    return 1;
+    return new DeviceInteractionResult(1, false);
 }
 
-int SpiBitBangingInterface::closeDevice()
+DeviceInteractionResult* SpiBitBangingInterface::closeDevice()
 {
-    // ToDo: Implement real device logic
-    return 1;
+    return new DeviceInteractionResult(1, false);
 }
 
-int SpiBitBangingInterface::crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount)
+DeviceInteractionResult* SpiBitBangingInterface::crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount)
 {
-    // ToDo: Implement real device logic
-    return 1;
+    return new DeviceInteractionResult(1, false);
 }
 
 Php::Value SpiBitBangingInterface::getCsPin() const { return (int16_t) csPin; }

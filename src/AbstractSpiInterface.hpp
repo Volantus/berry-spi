@@ -1,3 +1,5 @@
+#include "DeviceInteractionResult.hpp"
+
 #ifndef ABSTRACT_SPI_INTERFACE_H
 #define ABSTRACT_SPI_INTERFACE_H
 
@@ -25,19 +27,19 @@ protected:
     *   Executes the real commands for opening the device connection.
     *   Has to return the pigpio return code
     */
-    virtual int openDevice() = 0;
+    virtual DeviceInteractionResult* openDevice() = 0;
 
     /**
     *   Executes the real commands for closing the device connection.
     *   Has to return the pigpio return code
     */
-    virtual int closeDevice() = 0;
+    virtual DeviceInteractionResult* closeDevice() = 0;
 
     /**
     *   Executes the real commands for device cross (read + write) transfer.
     *   Has to return the pigpio return code
     */
-    virtual int crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount) = 0;
+    virtual DeviceInteractionResult* crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount) = 0;
 
 public:
     AbstractSpiInterface() = default;

@@ -4,6 +4,7 @@
 #include "BerrySpiState.hpp"
 #include "BerrySpiExceptions.hpp"
 #include "AbstractSpiInterface.hpp"
+#include "DeviceInteractionResult.hpp"
 #include "SpiRegularInterface.hpp"
 
 void SpiRegularInterface::__construct(Php::Parameters &params)
@@ -15,19 +16,22 @@ void SpiRegularInterface::__construct(Php::Parameters &params)
     channel = _channel;
 }
 
-int SpiRegularInterface::openDevice()
+DeviceInteractionResult* SpiRegularInterface::openDevice()
 {
-    return spiOpen(channel, speed, flags);
+    int returnCode = spiOpen(channel, speed, flags);
+    return new DeviceInteractionResult(returnCode, false);
 }
 
-int SpiRegularInterface::closeDevice()
+DeviceInteractionResult* SpiRegularInterface::closeDevice()
 {
-    return spiClose(handle);
+    int returnCode = spiClose(handle);
+    return new DeviceInteractionResult(returnCode, false);
 }
 
-int SpiRegularInterface::crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount)
+DeviceInteractionResult* SpiRegularInterface::crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount)
 {
-    return spiXfer(handle, outBuffer, inBuffer, byteCount);
+    int returnCode = spiXfer(handle, outBuffer, inBuffer, byteCount);
+    return new DeviceInteractionResult(returnCode, false);
 }
 
 Php::Value SpiRegularInterface::read(Php::Parameters &params)

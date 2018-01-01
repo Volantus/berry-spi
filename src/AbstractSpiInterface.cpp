@@ -3,6 +3,7 @@
 #include <pigpio.h>
 #include "BerrySpiState.hpp"
 #include "BerrySpiExceptions.hpp"
+#include "DeviceInteractionResult.hpp"
 #include "AbstractSpiInterface.hpp"
 
 bool AbstractSpiInterface::constructBaseParameters(int _speed, int _flags)
@@ -30,7 +31,10 @@ void AbstractSpiInterface::open()
         BerrySpiExceptions::LogicException("SPI device is already opened"); return;
     }
 
-    int rc = openDevice();
+    DeviceInteractionResult* result = openDevice();
+    int rc = result->getReturnCode();
+
+    if (result->isPhpExceptionThrown()) {return;}
 
     if (rc >= 0) {
         handle = rc;
@@ -57,7 +61,10 @@ void AbstractSpiInterface::close()
         return;
     }
 
-    int rc = closeDevice();
+    DeviceInteractionResult* result = closeDevice();
+    int rc = result->getReturnCode();
+
+    if (result->isPhpExceptionThrown()) {return;}
 
     if (rc == 0) {
         handle = -1;
@@ -81,8 +88,10 @@ Php::Value AbstractSpiInterface::transfer(Php::Parameters &params)
     unsigned count = data.length();
     char inBuffer[data.length()];
 
-    int rc = crossTransfer(inBuffer, outBuffer, count);
-    return handleTransferResult(rc, (int) data.size(), count, inBuffer);
+    DeviceInteractionResult* result = crossTransfer(inBuffer, outBuffer, count);
+    if (result->isPhpExceptionThrown()) {return -1;}
+
+    return handleTransferResult(result->getReturnCode(), (int) data.size(), count, inBuffer);
 }
 
 Php::Value AbstractSpiInterface::isOpen() const
