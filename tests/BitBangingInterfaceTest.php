@@ -1,7 +1,6 @@
 <?php
 namespace Volantus\BerrySpi\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Volantus\BerrySpi\BitBangingInterface;
 
 /**
@@ -9,7 +8,7 @@ use Volantus\BerrySpi\BitBangingInterface;
  *
  * @package Volantus\BerrySpi\Tests
  */
-class BitBangingInterfaceTest extends TestCase
+class BitBangingInterfaceTest extends SpiInterfaceTestCase
 {
     /**
      * @expectedException \Volantus\BerrySpi\InvalidArgumentException

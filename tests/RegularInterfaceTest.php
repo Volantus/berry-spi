@@ -1,7 +1,6 @@
 <?php
 namespace Volantus\BerrySpi\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Volantus\BerrySpi\RegularInterface;
 
 /**
@@ -9,7 +8,7 @@ use Volantus\BerrySpi\RegularInterface;
  *
  * @package Volantus\BerrySpi\Tests
  */
-class RegularInterfaceTest extends TestCase
+class RegularInterfaceTest extends SpiInterfaceTestCase
 {
     /**
      * @expectedException \Volantus\BerrySpi\InvalidArgumentException
@@ -44,8 +43,8 @@ class RegularInterfaceTest extends TestCase
      */
     public function test_open_invalidChannel()
     {
-        $interface = new RegularInterface(3, 32000, 0);
-        $interface->open();
+        $this->interface = new RegularInterface(3, 32000, 0);
+        $this->interface->open();
     }
 
     /**
@@ -54,8 +53,8 @@ class RegularInterfaceTest extends TestCase
      */
     public function test_open_invalidSpeed()
     {
-        $interface = new RegularInterface(1, 1, 0);
-        $interface->open();
+        $this->interface = new RegularInterface(1, 1, 0);
+        $this->interface->open();
     }
 
     /**
@@ -64,8 +63,8 @@ class RegularInterfaceTest extends TestCase
      */
     public function test_open_invalidFlags()
     {
-        $interface = new RegularInterface(1, 32000, 9999999);
-        $interface->open();
+        $this->interface = new RegularInterface(1, 32000, 9999999);
+        $this->interface->open();
     }
 
     /**
@@ -74,17 +73,17 @@ class RegularInterfaceTest extends TestCase
      */
     public function test_open_alreadyOpen()
     {
-        $interface = new RegularInterface(1, 32000, 0);
-        $interface->open();
-        $interface->open();
+        $this->interface = new RegularInterface(1, 32000, 0);
+        $this->interface->open();
+        $this->interface->open();
     }
 
     public function test_close_deviceOpened()
     {
-        $interface = new RegularInterface(1, 32000, 0);
-        $interface->open();
+        $this->interface = new RegularInterface(1, 32000, 0);
+        $this->interface->open();
 
-        self::assertTrue($interface->isOpen());
+        self::assertTrue($this->interface->isOpen());
     }
 
     /**
@@ -121,9 +120,9 @@ class RegularInterfaceTest extends TestCase
      */
     public function test_transfer_dataSendIsRead()
     {
-        $interface = new RegularInterface(1, 32000, 0);
-        $interface->open();
-        $readData = $interface->transfer('abc');
+        $this->interface = new RegularInterface(1, 32000, 0);
+        $this->interface->open();
+        $readData = $this->interface->transfer('abc');
 
         self::assertEquals('abc', $readData, 'Check if SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) are connected properly');
     }
@@ -144,9 +143,9 @@ class RegularInterfaceTest extends TestCase
      */
     public function test_read_negativeCountGiven()
     {
-        $interface = new RegularInterface(1, 32000, 0);
-        $interface->open();
-        $interface->read(-3);
+        $this->interface = new RegularInterface(1, 32000, 0);
+        $this->interface->open();
+        $this->interface->read(-3);
     }
 
     /**
