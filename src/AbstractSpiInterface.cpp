@@ -41,14 +41,10 @@ void AbstractSpiInterface::open()
     }
 
     switch (rc) {
-        case PI_BAD_SPI_CHANNEL:
-                BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid channel given (PI_BAD_SPI_CHANNEL)"); return;
         case PI_BAD_SPI_SPEED:
                 BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid speed given (PI_BAD_SPI_SPEED)"); return;
         case PI_BAD_FLAGS:
                 BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid flags given (PI_BAD_FLAGS)"); return;
-        case PI_NO_AUX_SPI:
-                BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => no aux (PI_NO_AUX_SPI)"); return;
         case PI_SPI_OPEN_FAILED:
                 BerrySpiExceptions::RuntimeException("Opening SPI device failed => unknown error while opening device (PI_SPI_OPEN_FAILED)"); return;
         default:
@@ -113,8 +109,6 @@ Php::Value AbstractSpiInterface::handleTransferResult(int rc, int dataSize, unsi
     }
 
     switch (rc) {
-        case PI_BAD_SPI_CHANNEL:
-            BerrySpiExceptions::RuntimeException("Transferring data failed  => bad handle (PI_BAD_HANDLE)"); return -1;
         case PI_BAD_SPI_COUNT:
              BerrySpiExceptions::RuntimeException("Transferring data failed  => bad spi count (PI_BAD_SPI_COUNT)"); return -1;
         case PI_SPI_XFER_FAILED:

@@ -17,6 +17,7 @@ protected:
     virtual DeviceInteractionResult* openDevice();
     virtual DeviceInteractionResult* closeDevice();
     virtual DeviceInteractionResult* crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount);
+    Php::Value handleTransferResult(int rc, int dataSize, unsigned transferCount, char inBuffer[]);
 
 public:
     SpiRegularInterface() = default;

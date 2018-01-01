@@ -19,7 +19,17 @@ void SpiRegularInterface::__construct(Php::Parameters &params)
 DeviceInteractionResult* SpiRegularInterface::openDevice()
 {
     int returnCode = spiOpen(channel, speed, flags);
-    return new DeviceInteractionResult(returnCode, false);
+
+    switch (returnCode) {
+        case PI_BAD_SPI_CHANNEL:
+            BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid channel given (PI_BAD_SPI_CHANNEL)");
+            return new DeviceInteractionResult(returnCode, true);
+        case PI_NO_AUX_SPI:
+            BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => no aux (PI_NO_AUX_SPI)");
+            return new DeviceInteractionResult(returnCode, true);
+        default:
+            return new DeviceInteractionResult(returnCode, false);
+    }
 }
 
 DeviceInteractionResult* SpiRegularInterface::closeDevice()
@@ -32,6 +42,16 @@ DeviceInteractionResult* SpiRegularInterface::crossTransfer(char* inBuffer, char
 {
     int returnCode = spiXfer(handle, outBuffer, inBuffer, byteCount);
     return new DeviceInteractionResult(returnCode, false);
+}
+
+
+Php::Value SpiRegularInterface::handleTransferResult(int rc, int dataSize, unsigned transferCount, char inBuffer[])
+{
+    if (rc == PI_BAD_SPI_CHANNEL) {
+        BerrySpiExceptions::RuntimeException("Transferring data failed  => bad handle (PI_BAD_HANDLE)"); return -1;
+    }
+
+    return AbstractSpiInterface::handleTransferResult(rc, dataSize, transferCount, inBuffer);
 }
 
 Php::Value SpiRegularInterface::read(Php::Parameters &params)
