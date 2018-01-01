@@ -37,20 +37,23 @@ void AbstractSpiInterface::open()
     if (result->isPhpExceptionThrown()) {return;}
 
     if (rc >= 0) {
-        handle = rc;
-    } else if (rc == PI_BAD_SPI_CHANNEL) {
-        BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid channel given (PI_BAD_SPI_CHANNEL)"); return;
-    } else if (rc == PI_BAD_SPI_SPEED) {
-        BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid speed given (PI_BAD_SPI_SPEED)"); return;
-    } else if (rc == PI_BAD_FLAGS) {
-        BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid flags given (PI_BAD_FLAGS)"); return;
-    } else if (rc == PI_NO_AUX_SPI) {
-        BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => no aux (PI_NO_AUX_SPI)"); return;
-    } else if (rc == PI_SPI_OPEN_FAILED) {
-        BerrySpiExceptions::RuntimeException("Opening SPI device failed => unknown error while opening device (PI_SPI_OPEN_FAILED)"); return;
-    } else {
-        std::string message = "Opening SPI device failed => unknown RC " + std::to_string(rc) + " returned by spiOpen";
-        BerrySpiExceptions::RuntimeException(message.c_str()); return;
+        handle = rc; return;
+    }
+
+    switch (rc) {
+        case PI_BAD_SPI_CHANNEL:
+                BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid channel given (PI_BAD_SPI_CHANNEL)"); return;
+        case PI_BAD_SPI_SPEED:
+                BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid speed given (PI_BAD_SPI_SPEED)"); return;
+        case PI_BAD_FLAGS:
+                BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid flags given (PI_BAD_FLAGS)"); return;
+        case PI_NO_AUX_SPI:
+                BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => no aux (PI_NO_AUX_SPI)"); return;
+        case PI_SPI_OPEN_FAILED:
+                BerrySpiExceptions::RuntimeException("Opening SPI device failed => unknown error while opening device (PI_SPI_OPEN_FAILED)"); return;
+        default:
+            std::string message = "Opening SPI device failed => unknown RC " + std::to_string(rc) + " returned by spiOpen";
+            BerrySpiExceptions::RuntimeException(message.c_str()); return;
     }
 }
 
@@ -107,14 +110,17 @@ Php::Value AbstractSpiInterface::handleTransferResult(int rc, int dataSize, unsi
     if (rc >= 0) {
         inBuffer[dataSize] = '\0';
         return (char *) inBuffer;
-    } else if (rc == PI_BAD_HANDLE) {
-        BerrySpiExceptions::RuntimeException("Transferring data failed  => bad handle (PI_BAD_HANDLE)"); return -1;
-    } else if (rc == PI_BAD_SPI_COUNT) {
-        BerrySpiExceptions::RuntimeException("Transferring data failed  => bad spi count (PI_BAD_SPI_COUNT)"); return -1;
-    } else if (rc == PI_SPI_XFER_FAILED) {
-        BerrySpiExceptions::RuntimeException("Transferring data failed  => unknown error (PI_SPI_XFER_FAILED)"); return -1;
-    } else {
-        std::string message = "Transferring data failed => invalid RC " + std::to_string(rc) + " returned by SPI driver, expected" + std::to_string((int16_t) transferCount);
-        BerrySpiExceptions::RuntimeException(message.c_str()); return -1;
+    }
+
+    switch (rc) {
+        case PI_BAD_SPI_CHANNEL:
+            BerrySpiExceptions::RuntimeException("Transferring data failed  => bad handle (PI_BAD_HANDLE)"); return -1;
+        case PI_BAD_SPI_COUNT:
+             BerrySpiExceptions::RuntimeException("Transferring data failed  => bad spi count (PI_BAD_SPI_COUNT)"); return -1;
+        case PI_SPI_XFER_FAILED:
+            BerrySpiExceptions::RuntimeException("Transferring data failed  => unknown error (PI_SPI_XFER_FAILED)"); return -1;
+        default:
+            std::string message = "Transferring data failed => invalid RC " + std::to_string(rc) + " returned by SPI driver, expected" + std::to_string((int16_t) transferCount);
+            BerrySpiExceptions::RuntimeException(message.c_str()); return -1;
     }
 }
