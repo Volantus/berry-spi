@@ -62,6 +62,24 @@ bool SpiBitBangingInterface::validateOpen(int returnCode)
     return AbstractSpiInterface::validateOpen(returnCode);
 }
 
+bool SpiBitBangingInterface::validateClose(int returnCode)
+{
+    if (returnCode >= 0) {
+        return true;
+    }
+
+    switch (returnCode) {
+        case PI_BAD_USER_GPIO:
+            BerrySpiExceptions::RuntimeException("Closing SPI device failed => internal extension failure (PI_BAD_USER_GPIO)");
+            return false;
+        case PI_NOT_SPI_GPIO:
+            BerrySpiExceptions::RuntimeException("Closing SPI device failed => internal extension failure (PI_NOT_SPI_GPIO)");
+            return false;
+    }
+
+    return AbstractSpiInterface::validateClose(returnCode);
+}
+
 Php::Value SpiBitBangingInterface::getCsPin() const { return (int16_t) csPin; }
 Php::Value SpiBitBangingInterface::getMosiPin() const { return (int16_t) mosiPin; }
 Php::Value SpiBitBangingInterface::getMisoPin() const { return (int16_t) misoPin; }

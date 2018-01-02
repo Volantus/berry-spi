@@ -81,6 +81,20 @@ bool SpiRegularInterface::validateOpen(int returnCode)
     return AbstractSpiInterface::validateOpen(returnCode);
 }
 
+bool SpiRegularInterface::validateClose(int returnCode)
+{
+    if (returnCode == 0) {
+        return true;
+    }
+
+    if (returnCode == PI_BAD_HANDLE) {
+        BerrySpiExceptions::RuntimeException("Closing SPI device failed => bad handle (PI_BAD_HANDLE)");
+        return false;
+    }
+
+    return AbstractSpiInterface::validateClose(returnCode);
+}
+
 
 bool SpiRegularInterface::validateTransfer(int returnCode, int transferCount)
 {

@@ -110,11 +110,6 @@ bool AbstractSpiInterface::validateClose(int returnCode)
         return true;
     }
 
-    if (returnCode == PI_BAD_HANDLE) {
-        BerrySpiExceptions::RuntimeException("Closing SPI device failed => bad handle (PI_BAD_HANDLE)");
-        return false;
-    }
-
     std::string message = "Closing SPI device failed => unknown RC " + std::to_string(returnCode) + " returned by spiClose";
     BerrySpiExceptions::RuntimeException(message.c_str());
     return false;

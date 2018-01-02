@@ -17,6 +17,7 @@ protected:
     virtual int closeDevice();
     virtual int crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount);
     virtual bool validateOpen(int returnCode);
+    virtual bool validateClose(int returnCode);
     virtual bool validateTransfer(int returnCode, int transferCount);
 
 public:

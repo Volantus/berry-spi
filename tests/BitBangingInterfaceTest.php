@@ -115,6 +115,25 @@ class BitBangingInterfaceTest extends SpiInterfaceTestCase
         self::assertTrue($this->interface->isOpen());
     }
 
+    /**
+     * @expectedException \Volantus\BerrySpi\LogicException
+     * @expectedExceptionMessage Unable to close an unestablished device connection
+     */
+    public function test_close_notOpen()
+    {
+        $this->interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $this->interface->close();
+    }
+
+    public function test_close_deviceClosed()
+    {
+        $interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $interface->open();
+        $interface->close();
+
+        self::assertFalse($interface->isOpen());
+    }
+
     public function test_getCsPin_correct()
     {
         $interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);

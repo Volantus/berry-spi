@@ -78,7 +78,7 @@ class RegularInterfaceTest extends SpiInterfaceTestCase
         $this->interface->open();
     }
 
-    public function test_close_deviceOpened()
+    public function test_open_deviceOpened()
     {
         $this->interface = new RegularInterface(1, 32000, 0);
         $this->interface->open();

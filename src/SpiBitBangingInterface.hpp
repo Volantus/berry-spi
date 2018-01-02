@@ -20,6 +20,7 @@ private:
 
 protected:
     virtual bool validateOpen(int returnCode);
+    virtual bool validateClose(int returnCode);
     virtual int openDevice();
     virtual int closeDevice();
     virtual int crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount);
