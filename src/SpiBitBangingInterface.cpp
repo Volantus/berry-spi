@@ -38,7 +38,7 @@ int SpiBitBangingInterface::closeDevice()
 
 int SpiBitBangingInterface::crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount)
 {
-    return 1;
+    return bbSPIXfer(csPin, outBuffer, inBuffer, byteCount);
 }
 
 bool SpiBitBangingInterface::validateOpen(int returnCode)
@@ -78,6 +78,27 @@ bool SpiBitBangingInterface::validateClose(int returnCode)
     }
 
     return AbstractSpiInterface::validateClose(returnCode);
+}
+
+bool SpiBitBangingInterface::validateTransfer(int returnCode, int transferCount)
+{
+    if (returnCode >= 0) {
+        return true;
+    }
+
+    switch (returnCode) {
+        case PI_BAD_USER_GPIO:
+            BerrySpiExceptions::RuntimeException("Closing SPI device failed => internal extension failure (PI_BAD_USER_GPIO)");
+            return false;
+        case PI_NOT_SPI_GPIO:
+            BerrySpiExceptions::RuntimeException("Closing SPI device failed => internal extension failure (PI_NOT_SPI_GPIO)");
+            return false;
+        case PI_BAD_POINTER:
+            BerrySpiExceptions::RuntimeException("Closing SPI device failed => internal extension failure (PI_BAD_POINTER)");
+            return false;
+    }
+
+    return AbstractSpiInterface::validateTransfer(returnCode, transferCount);
 }
 
 Php::Value SpiBitBangingInterface::getCsPin() const { return (int16_t) csPin; }

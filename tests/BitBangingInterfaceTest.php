@@ -134,6 +134,28 @@ class BitBangingInterfaceTest extends SpiInterfaceTestCase
         self::assertFalse($interface->isOpen());
     }
 
+    /**
+     * @expectedException \Volantus\BerrySpi\LogicException
+     * @expectedExceptionMessage Unable to transfer data via an unestablished device connection
+     */
+    public function test_transfer_notOpened()
+    {
+        $interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $interface->transfer('abc');
+    }
+
+    /**
+     * For this test SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) pins needs to be connected (e.g. jumper cable)
+     */
+    public function test_transfer_dataSendIsRead()
+    {
+        $this->interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $this->interface->open();
+        $readData = $this->interface->transfer('abc');
+
+        self::assertEquals('abc', $readData, 'Check if GPIO16 (MISO) and GPIO20 (MOSI) are connected properly');
+    }
+
     public function test_getCsPin_correct()
     {
         $interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
