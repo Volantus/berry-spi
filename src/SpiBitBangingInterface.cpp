@@ -29,12 +29,27 @@ void SpiBitBangingInterface::__construct(Php::Parameters &params)
 
 DeviceInteractionResult* SpiBitBangingInterface::openDevice()
 {
-    return new DeviceInteractionResult(1, false);
+    int rc = bbSPIOpen(csPin, misoPin, mosiPin, sclkPin, speed, flags);
+
+    switch (rc) {
+        case PI_BAD_USER_GPIO:
+            BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => on of the given pins is invalid (PI_BAD_USER_GPIO)");
+            return new DeviceInteractionResult(rc, true);
+        case PI_BAD_SPI_BAUD:
+            BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => bad SPI baud rate (speed), probably not 50-500k (PI_BAD_SPI_BAUD)");
+            return new DeviceInteractionResult(rc, true);
+        case PI_GPIO_IN_USE:
+            BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => GPIO is already in use (PI_GPIO_IN_USE)");
+            return new DeviceInteractionResult(rc, true);
+        default:
+            return new DeviceInteractionResult(rc, false);
+    }
 }
 
 DeviceInteractionResult* SpiBitBangingInterface::closeDevice()
 {
-    return new DeviceInteractionResult(1, false);
+    int rc = bbSPIClose(csPin);
+    return new DeviceInteractionResult(rc, false);
 }
 
 DeviceInteractionResult* SpiBitBangingInterface::crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount)

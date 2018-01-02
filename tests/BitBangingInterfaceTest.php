@@ -64,6 +64,57 @@ class BitBangingInterfaceTest extends SpiInterfaceTestCase
         new BitBangingInterface(12, 16, 20, 21, 512, -1);
     }
 
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Opening SPI device failed => bad SPI baud rate (speed), probably not 50-500k (PI_BAD_SPI_BAUD)
+     */
+    public function test_open_invalidSpeed()
+    {
+        $this->interface = new BitBangingInterface(12, 16, 20, 21, 9999999, 0);
+        $this->interface->open();
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Opening SPI device failed => on of the given pins is invalid (PI_BAD_USER_GPIO)
+     */
+    public function test_open_badGpio()
+    {
+        $this->interface = new BitBangingInterface(32, 16, 20, 21, 512, 0);
+        $this->interface->open();
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Opening SPI device failed => GPIO is already in use (PI_GPIO_IN_USE)
+     */
+    public function test_open_gpioAlreadyInUse()
+    {
+        $this->interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $this->interface->open();
+        $doubleInterface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $doubleInterface->open();
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\LogicException
+     * @expectedExceptionMessage SPI device is already open
+     */
+    public function test_open_alreadyOpen()
+    {
+        $this->interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $this->interface->open();
+        $this->interface->open();
+    }
+
+    public function test_open_deviceOpened()
+    {
+        $this->interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $this->interface->open();
+
+        self::assertTrue($this->interface->isOpen());
+    }
+
     public function test_getCsPin_correct()
     {
         $interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
