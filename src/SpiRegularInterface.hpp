@@ -1,4 +1,3 @@
-#include "DeviceInteractionResult.hpp"
 #include "AbstractSpiInterface.hpp"
 
 #ifndef SPI_REGULAR_INTERFACE_H
@@ -14,10 +13,11 @@ private:
     unsigned channel;
 
 protected:
-    virtual DeviceInteractionResult* openDevice();
-    virtual DeviceInteractionResult* closeDevice();
-    virtual DeviceInteractionResult* crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount);
-    Php::Value handleTransferResult(int rc, int dataSize, unsigned transferCount, char inBuffer[]);
+    virtual int openDevice();
+    virtual int closeDevice();
+    virtual int crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount);
+    virtual bool validateOpen(int returnCode);
+    virtual bool validateTransfer(int returnCode, int transferCount);
 
 public:
     SpiRegularInterface() = default;

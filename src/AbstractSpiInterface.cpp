@@ -31,25 +31,9 @@ void AbstractSpiInterface::open()
         BerrySpiExceptions::LogicException("SPI device is already opened"); return;
     }
 
-    DeviceInteractionResult* result = openDevice();
-    int rc = result->getReturnCode();
-
-    if (result->isPhpExceptionThrown()) {return;}
-
-    if (rc >= 0) {
-        handle = rc; return;
-    }
-
-    switch (rc) {
-        case PI_BAD_SPI_SPEED:
-                BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid speed given (PI_BAD_SPI_SPEED)"); return;
-        case PI_BAD_FLAGS:
-                BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid flags given (PI_BAD_FLAGS)"); return;
-        case PI_SPI_OPEN_FAILED:
-                BerrySpiExceptions::RuntimeException("Opening SPI device failed => unknown error while opening device (PI_SPI_OPEN_FAILED)"); return;
-        default:
-            std::string message = "Opening SPI device failed => unknown RC " + std::to_string(rc) + " returned by spiOpen";
-            BerrySpiExceptions::RuntimeException(message.c_str()); return;
+    int rc = openDevice();
+    if (validateOpen(rc)) {
+        handle = rc;
     }
 }
 
@@ -60,18 +44,9 @@ void AbstractSpiInterface::close()
         return;
     }
 
-    DeviceInteractionResult* result = closeDevice();
-    int rc = result->getReturnCode();
-
-    if (result->isPhpExceptionThrown()) {return;}
-
-    if (rc == 0) {
+    int rc = closeDevice();
+    if (validateClose(rc)) {
         handle = -1;
-    } else if (rc == PI_BAD_HANDLE) {
-        BerrySpiExceptions::RuntimeException("Closing SPI device failed => bad handle (PI_BAD_HANDLE)"); return;
-    } else if (rc != 0) {
-        std::string message = "Closing SPI device failed => unknown RC " + std::to_string(rc) + " returned by spiClose";
-        BerrySpiExceptions::RuntimeException(message.c_str()); return;
     }
 }
 
@@ -87,10 +62,8 @@ Php::Value AbstractSpiInterface::transfer(Php::Parameters &params)
     unsigned count = data.length();
     char inBuffer[data.length()];
 
-    DeviceInteractionResult* result = crossTransfer(inBuffer, outBuffer, count);
-    if (result->isPhpExceptionThrown()) {return -1;}
-
-    return handleTransferResult(result->getReturnCode(), (int) data.size(), count, inBuffer);
+    int rc = crossTransfer(inBuffer, outBuffer, count);
+    return handleTransferResult(rc, (int) data.size(), count, inBuffer);
 }
 
 Php::Value AbstractSpiInterface::isOpen() const
@@ -98,23 +71,74 @@ Php::Value AbstractSpiInterface::isOpen() const
     return handle != -1;
 }
 
-Php::Value AbstractSpiInterface::getSpeed() const { return (int16_t) speed; }
-Php::Value AbstractSpiInterface::getFlags() const { return (int16_t) flags; }
-
 Php::Value AbstractSpiInterface::handleTransferResult(int rc, int dataSize, unsigned transferCount, char inBuffer[])
 {
-    if (rc >= 0) {
+    if (validateTransfer(rc, transferCount)) {
         inBuffer[dataSize] = '\0';
         return (char *) inBuffer;
     }
 
-    switch (rc) {
-        case PI_BAD_SPI_COUNT:
-             BerrySpiExceptions::RuntimeException("Transferring data failed  => bad spi count (PI_BAD_SPI_COUNT)"); return -1;
-        case PI_SPI_XFER_FAILED:
-            BerrySpiExceptions::RuntimeException("Transferring data failed  => unknown error (PI_SPI_XFER_FAILED)"); return -1;
+    return false;
+}
+
+bool AbstractSpiInterface::validateOpen(int returnCode)
+{
+    if (returnCode >= 0) {
+        return true;
+    }
+
+    switch (returnCode) {
+        case PI_BAD_SPI_SPEED:
+            BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid speed given (PI_BAD_SPI_SPEED)");
+            return false;
+        case PI_BAD_FLAGS:
+            BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => invalid flags given (PI_BAD_FLAGS)");
+            return false;
+        case PI_SPI_OPEN_FAILED:
+            BerrySpiExceptions::RuntimeException("Opening SPI device failed => unknown error while opening device (PI_SPI_OPEN_FAILED)");
+            return false;
         default:
-            std::string message = "Transferring data failed => invalid RC " + std::to_string(rc) + " returned by SPI driver, expected" + std::to_string((int16_t) transferCount);
-            BerrySpiExceptions::RuntimeException(message.c_str()); return -1;
+            std::string message = "Opening SPI device failed => unknown RC " + std::to_string(returnCode) + " returned by spiOpen";
+            BerrySpiExceptions::RuntimeException(message.c_str());
+            return false;
     }
 }
+
+bool AbstractSpiInterface::validateClose(int returnCode)
+{
+    if (returnCode == 0) {
+        return true;
+    }
+
+    if (returnCode == PI_BAD_HANDLE) {
+        BerrySpiExceptions::RuntimeException("Closing SPI device failed => bad handle (PI_BAD_HANDLE)");
+        return false;
+    }
+
+    std::string message = "Closing SPI device failed => unknown RC " + std::to_string(returnCode) + " returned by spiClose";
+    BerrySpiExceptions::RuntimeException(message.c_str());
+    return false;
+}
+
+bool AbstractSpiInterface::validateTransfer(int returnCode, int transferCount)
+{
+    if (returnCode >= 0) {
+        return true;
+    }
+
+    switch (returnCode) {
+        case PI_BAD_SPI_COUNT:
+             BerrySpiExceptions::RuntimeException("Transferring data failed  => bad spi count (PI_BAD_SPI_COUNT)");
+             return false;
+        case PI_SPI_XFER_FAILED:
+            BerrySpiExceptions::RuntimeException("Transferring data failed  => unknown error (PI_SPI_XFER_FAILED)");
+            return false;
+        default:
+            std::string message = "Transferring data failed => invalid RC " + std::to_string(returnCode) + " returned by SPI driver, expected" + std::to_string((int16_t) transferCount);
+            BerrySpiExceptions::RuntimeException(message.c_str());
+            return false;
+    }
+}
+
+Php::Value AbstractSpiInterface::getSpeed() const { return (int16_t) speed; }
+Php::Value AbstractSpiInterface::getFlags() const { return (int16_t) flags; }

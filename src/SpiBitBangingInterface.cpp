@@ -4,7 +4,6 @@
 #include "BerrySpiState.hpp"
 #include "BerrySpiExceptions.hpp"
 #include "AbstractSpiInterface.hpp"
-#include "DeviceInteractionResult.hpp"
 #include "SpiBitBangingInterface.hpp"
 
 void SpiBitBangingInterface::__construct(Php::Parameters &params)
@@ -27,34 +26,40 @@ void SpiBitBangingInterface::__construct(Php::Parameters &params)
     sclkPin = _sclkPin;
 }
 
-DeviceInteractionResult* SpiBitBangingInterface::openDevice()
+int SpiBitBangingInterface::openDevice()
 {
-    int rc = bbSPIOpen(csPin, misoPin, mosiPin, sclkPin, speed, flags);
+    return bbSPIOpen(csPin, misoPin, mosiPin, sclkPin, speed, flags);
+}
 
-    switch (rc) {
+int SpiBitBangingInterface::closeDevice()
+{
+    return bbSPIClose(csPin);
+}
+
+int SpiBitBangingInterface::crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount)
+{
+    return 1;
+}
+
+bool SpiBitBangingInterface::validateOpen(int returnCode)
+{
+    if (returnCode >= 0) {
+        return true;
+    }
+
+    switch (returnCode) {
         case PI_BAD_USER_GPIO:
             BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => on of the given pins is invalid (PI_BAD_USER_GPIO)");
-            return new DeviceInteractionResult(rc, true);
+            return false;
         case PI_BAD_SPI_BAUD:
             BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => bad SPI baud rate (speed), probably not 50-500k (PI_BAD_SPI_BAUD)");
-            return new DeviceInteractionResult(rc, true);
+            return false;
         case PI_GPIO_IN_USE:
             BerrySpiExceptions::InvalidArgumentException("Opening SPI device failed => GPIO is already in use (PI_GPIO_IN_USE)");
-            return new DeviceInteractionResult(rc, true);
-        default:
-            return new DeviceInteractionResult(rc, false);
+            return false;
     }
-}
 
-DeviceInteractionResult* SpiBitBangingInterface::closeDevice()
-{
-    int rc = bbSPIClose(csPin);
-    return new DeviceInteractionResult(rc, false);
-}
-
-DeviceInteractionResult* SpiBitBangingInterface::crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount)
-{
-    return new DeviceInteractionResult(1, false);
+    return AbstractSpiInterface::validateOpen(returnCode);
 }
 
 Php::Value SpiBitBangingInterface::getCsPin() const { return (int16_t) csPin; }

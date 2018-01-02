@@ -1,5 +1,4 @@
 #include "AbstractSpiInterface.hpp"
-#include "DeviceInteractionResult.hpp"
 
 #ifndef SPI_BIT_BANGING_INTERFACE_H
 #define SPI_BIT_BANGING_INTERFACE_H
@@ -20,9 +19,10 @@ private:
     unsigned sclkPin;
 
 protected:
-    virtual DeviceInteractionResult* openDevice();
-    virtual DeviceInteractionResult* closeDevice();
-    virtual DeviceInteractionResult* crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount);
+    virtual bool validateOpen(int returnCode);
+    virtual int openDevice();
+    virtual int closeDevice();
+    virtual int crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount);
 
 public:
     SpiBitBangingInterface() = default;

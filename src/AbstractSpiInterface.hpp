@@ -1,5 +1,3 @@
-#include "DeviceInteractionResult.hpp"
-
 #ifndef ABSTRACT_SPI_INTERFACE_H
 #define ABSTRACT_SPI_INTERFACE_H
 
@@ -23,23 +21,32 @@ protected:
     /* Handles return of all device I/O operations */
     Php::Value handleTransferResult(int rc, int dataSize, unsigned transferCount, char inBuffer[]);
 
+    /* Validates the return code received while opening the device */
+    virtual bool validateOpen(int returnCode);
+
+    /* Validates the return code received while closing the device */
+    virtual bool validateClose(int returnCode);
+
+    /* Validates the return code received while transferring data */
+    virtual bool validateTransfer(int returnCode, int transferCount);
+
     /**
     *   Executes the real commands for opening the device connection.
     *   Has to return the pigpio return code
     */
-    virtual DeviceInteractionResult* openDevice() = 0;
+    virtual int openDevice() = 0;
 
     /**
     *   Executes the real commands for closing the device connection.
     *   Has to return the pigpio return code
     */
-    virtual DeviceInteractionResult* closeDevice() = 0;
+    virtual int closeDevice() = 0;
 
     /**
     *   Executes the real commands for device cross (read + write) transfer.
     *   Has to return the pigpio return code
     */
-    virtual DeviceInteractionResult* crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount) = 0;
+    virtual int crossTransfer(char* inBuffer, char* outBuffer, unsigned byteCount) = 0;
 
 public:
     AbstractSpiInterface() = default;
