@@ -14,7 +14,7 @@ Deployment via official DEB repository is planned.
 Download the latest shared object and include it into php.ini:
 ```bash
 cd /usr/lib/php/$(php -v | grep -i 'PHP [57]' | cut -c1-8 | sed s/'PHP '//g | cut -c1-3)
-wget https://github.com/Volantus/berry-spi/releases/download/0.0.2/berry-spi.so
+wget https://github.com/Volantus/berry-spi/releases/download/0.1.0/berry-spi.so
 sudo echo "extension=berry-spi.so" >> /etc/php/7.0/cli/php.ini
 ```
 ## Compile from source
@@ -29,8 +29,11 @@ sudo make install
 
 
 # Usage
-Communication is handled by the RegularInterface class. (Implementation of BitBanging is planned for the near future)
+Communication is handled by the following classes
+* RegularInterface: In case of using the native SPI pins (GPIO 07 - 11)
+* BitBangingInterface: In case of using any other GPIO pins
 
+## Regular interface
 ```PHP
 use Volantus\BerrySpi\RegularInterface;
 
@@ -52,7 +55,7 @@ $interface->write('abc');
 $interface->close();
 ```
 
-## Parameters
+### Parameters
 The constructor accept three parameters
 
 | Parameter     | Description                                                                             |
@@ -62,45 +65,55 @@ The constructor accept three parameters
 |               | 32K-125M (values above 30M are unlikely to work)                                        |
 | flags         | Additional configuration, see [details](http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen)  |
 
+### Bit banging interface
+```PHP
+use Volantus\BerrySpi\BitBangingInterface;
+
+$interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+
+// Opening the connection
+$interface->open();
+
+// Sending + retrieving data simustanisly
+$retrievedData = $interface->transfer(0x1269493);
+
+// Don't forget to close the connection
+$interface->close();
+```
+
+### Parameters
+The constructor accept three parameters
+
+| Parameter     | Description                                                                              |
+| ------------- |------------------------------------------------------------------------------------------|
+| csPin         | The GPIO (0-31) used for the slave select signal *¹                                      |
+| misoPin       | The GPIO (0-31) used for the MISO signal *²                                              |
+| mosiPin       | The GPIO (0-31) used for the MOSI signal *²                                              |
+| sclkPin       | The GPIO (0-31) used for the SCLK signal *²                                              |
+| speed         | Baud speed in bits per second                                                            |
+|               | 50-250k                                                                                  |
+| flags         | Additional configuration, see [details](http://abyz.me.uk/rpi/pigpio/cif.html#bbSpiOpen) |
+
+*¹ This pin has to be unique for each device
+
+*² This pin can be shared with multiple slave devices, if no parallel data transfer is required
+
 ## Error handling
-All errors are wrapped in exceptions within the namespace Volantus\BerrySpi
-### RegularInterface::__construct
-* Volantus\BerrySpi\InvalidArgumentException
-  * Negative value for channel, speed or flag given
-* Volantus\BerrySpi\GpioInitFailureException
-  * Pigpio library initialization failed (e.g. insufficient permissions)
-  
-### RegularInterface::open
-* Volantus\BerrySpi\InvalidArgumentException
-  * Invalid channel, speed or flag parameter (reported by pigpio library) or no aux available
-* Volantus\BerrySpi\LogicException
-  * Device already opened
-* Volantus\BerrySpi\RuntimeException
-  * In case of deeper unknown errors
-  
-### RegularInterface::close
-* Volantus\BerrySpi\LogicException
-  * Device not open
-* Volantus\BerrySpi\RuntimeException
-  * In case of deeper unknown errors
-  
-### RegularInterface::transfer
-* Volantus\BerrySpi\LogicException
-  * Device not open
-* Volantus\BerrySpi\RuntimeException
-  * In case of deeper unknown errors (e.g. PI_BAD_SPI_COUNT)
-  
-### RegularInterface::read
-* Volantus\BerrySpi\LogicException
-  * Device not open
-* Volantus\BerrySpi\RuntimeException
-  * In case of deeper unknown errors (e.g. PI_BAD_SPI_COUNT)
-  
-### RegularInterface::write
-* Volantus\BerrySpi\LogicException
-  * Device not open
-* Volantus\BerrySpi\RuntimeException
-  * In case of deeper unknown errors (e.g. PI_BAD_SPI_COUNT)
+All errors are wrapped in exceptions within the namespace Volantus\BerrySpi.
+To see which method throws which exception please consult the stubs.
+
+### Volantus\BerrySpi\InvalidArgumentException
+In case of invalid parameters (e.g. negative channel or bad speed).
+
+### Volantus\BerrySpi\GpioInitFailureException
+Pigpio library initialization failed (e.g. insufficient permissions).
+
+### Volantus\BerrySpi\LogicException
+In case of logically incorrect behaviour (e.g. trying to send data by an non-open connection).
+
+### Volantus\BerrySpi\RuntimeException
+In case of deeper problems (e.g. internal failure).
+
   
 # Contribution
 Contribution in form of bug reports, suggestions or pull requests is highly welcome!

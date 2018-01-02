@@ -15,6 +15,9 @@ class RegularInterface
      * @param int $speed   Baud speed in bits per second
      *                     32K-125M (values above 30M are unlikely to work)
      * @param int $flags   Additional flags
+     *
+     * @throws InvalidArgumentException
+     * @throws GpioInitException
      */
     public function __construct(int $channel, int $speed, int $flags)
     {
@@ -22,6 +25,10 @@ class RegularInterface
 
     /**
      * @return void
+     *
+     * @throws InvalidArgumentException
+     * @throws LogicException
+     * @throws RuntimeException
      */
     public function open()
     {
@@ -29,6 +36,9 @@ class RegularInterface
 
     /**
      * @return void
+     *
+     * @throws LogicException
+     * @throws RuntimeException
      */
     public function close()
     {
@@ -69,6 +79,9 @@ class RegularInterface
      * @param string $data Data to send to device
      *
      * @return string data received by the SPI device
+     *
+     * @throws LogicException
+     * @throws RuntimeException
      */
     public function transfer(string $data): string
     {
@@ -80,6 +93,10 @@ class RegularInterface
      * @param int $count Count of bytes to read
      *
      * @return string data read by the SPI device
+     *
+     * @throws InvalidArgumentException
+     * @throws LogicException
+     * @throws RuntimeException
      */
     public function read(int $count): string
     {
@@ -89,6 +106,9 @@ class RegularInterface
      * Sends data to the SPI device
      *
      * @param string $data
+     *
+     * @throws LogicException
+     * @throws RuntimeException
      */
     public function write(string $data)
     {
@@ -113,6 +133,9 @@ class BitBangingInterface
      * @param int $flags   Additional flags
      *
      * @internal param int $channel Regular SPI channel (0 or 1)
+     *
+     * @throws InvalidArgumentException
+     * @throws GpioInitException
      */
     public function __construct(int $csPin, int $misoPin, int $mosiPin, int $sclkPin, int $speed, int $flags)
     {
@@ -124,6 +147,10 @@ class BitBangingInterface
 
     /**
      * @return void
+     *
+     * @throws InvalidArgumentException
+     * @throws LogicException
+     * @throws RuntimeException
      */
     public function open()
     {
@@ -131,6 +158,9 @@ class BitBangingInterface
 
     /**
      * @return void
+     *
+     * @throws LogicException
+     * @throws RuntimeException
      */
     public function close()
     {
@@ -192,6 +222,9 @@ class BitBangingInterface
      * @param string $data Data to send to device
      *
      * @return string data received by the SPI device
+     *
+     * @throws RuntimeException
+     * @throws LogicException
      */
     public function transfer(string $data): string
     {
@@ -222,15 +255,6 @@ class GpioInitException extends \Exception
  * @package Volantus\BerrySpi
  */
 class LogicException extends \Exception
-{
-}
-
-/**
- * Class GpioFailureException
- *
- * @package Volantus\BerrySpi
- */
-class GpioFailureException extends \Exception
 {
 }
 
