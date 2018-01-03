@@ -152,7 +152,7 @@ class BitBangingInterfaceTest extends SpiInterfaceTestCase
     }
 
     /**
-     * For this test SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) pins needs to be connected (e.g. jumper cable)
+     * For this test GPIO16 (MISO) and GPIO20 (MOSI) pins needs to be connected (e.g. jumper cable)
      */
     public function test_transfer_dataSendIsRead()
     {

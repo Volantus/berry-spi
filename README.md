@@ -118,7 +118,9 @@ In case of deeper problems (e.g. internal failure).
 # Contribution
 Contribution in form of bug reports, suggestions or pull requests is highly welcome!
 ## Executing the unit tests
-For some tests SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) pins needs to be connected (e.g. by jumper cable).
+For integration testing some GPIO pins need to be connected (e.g. by jumper cable) while running the test suite
+ * SPI_MISO (GPIO09) and SPI_MOSI (GPIO10)
+ * GPIO16 and GPIO20  
 
 All tests are managed by PHPUnit:
 ```Bash
