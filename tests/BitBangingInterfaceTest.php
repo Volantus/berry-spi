@@ -2,6 +2,7 @@
 namespace Volantus\BerrySpi\Tests;
 
 use Volantus\BerrySpi\BitBangingInterface;
+use Volantus\BerrySpi\SpiInterface;
 
 /**
  * Class BitBangingInterfaceTest
@@ -10,6 +11,12 @@ use Volantus\BerrySpi\BitBangingInterface;
  */
 class BitBangingInterfaceTest extends SpiInterfaceTestCase
 {
+    public function test_implements_spiInterface()
+    {
+        $interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        self::assertInstanceOf(SpiInterface::class, $interface);
+    }
+
     /**
      * @expectedException \Volantus\BerrySpi\InvalidArgumentException
      * @expectedExceptionMessage No negative values allowed for <csPin> parameter

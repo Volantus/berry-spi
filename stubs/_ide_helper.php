@@ -2,11 +2,64 @@
 namespace Volantus\BerrySpi;
 
 /**
+ * Interface SpiInterface
+ *
+ * @package Volantus\BerrySpi
+ */
+interface SpiInterface
+{
+
+    /**
+     * @return void
+     *
+     * @throws InvalidArgumentException
+     * @throws LogicException
+     * @throws RuntimeException
+     */
+    public function open();
+
+    /**
+     * @return void
+     *
+     * @throws LogicException
+     * @throws RuntimeException
+     */
+    public function close();
+
+    /**
+     * @return int
+     */
+    public function getSpeed(): int;
+    /**
+     * @return int
+     */
+    public function getFlags(): int;
+
+    /**
+     * @return bool True if SPI device connection is open
+     */
+    public function isOpen(): bool;
+
+    /**
+     * Transfers data to SPI device.
+     * Simultaneously same byte count of data is read from the device and returned.
+     *
+     * @param string $data Data to send to device
+     *
+     * @return string data received by the SPI device
+     *
+     * @throws LogicException
+     * @throws RuntimeException
+     */
+    public function transfer(string $data): string;
+}
+
+/**
  * Class SPIInterface
  *
  * @package Volantus\BerrySpi
  */
-class RegularInterface
+class RegularInterface implements SpiInterface
 {
     /**
      * SPIInterface constructor.
@@ -24,64 +77,49 @@ class RegularInterface
     }
 
     /**
-     * @return void
-     *
-     * @throws InvalidArgumentException
-     * @throws LogicException
-     * @throws RuntimeException
+     * @inheritdoc
      */
     public function open()
     {
     }
 
     /**
-     * @return void
-     *
-     * @throws LogicException
-     * @throws RuntimeException
+     * @inheritdoc
      */
     public function close()
     {
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getChannel(): int
     {
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getSpeed(): int
     {
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getFlags(): int
     {
     }
 
     /**
-     * @return bool True if SPI device connection is open
+     * @inheritdoc
      */
     public function isOpen(): bool
     {
     }
 
     /**
-     * Transfers data to SPI device.
-     * Simultaneously same byte count of data is read from the device and returned.
-     *
-     * @param string $data Data to send to device
-     *
-     * @return string data received by the SPI device
-     *
-     * @throws LogicException
-     * @throws RuntimeException
+     * @inheritdoc
      */
     public function transfer(string $data): string
     {
@@ -120,7 +158,7 @@ class RegularInterface
  *
  * @package Volantus\BerrySpi
  */
-class BitBangingInterface
+class BitBangingInterface implements SpiInterface
 {
     /**
      * SPIInterface constructor.
@@ -139,28 +177,17 @@ class BitBangingInterface
      */
     public function __construct(int $csPin, int $misoPin, int $mosiPin, int $sclkPin, int $speed, int $flags)
     {
-        $this->csPin = $csPin;
-        $this->misoPin = $misoPin;
-        $this->mosiPin = $mosiPin;
-        $this->sclkPin = $sclkPin;
     }
 
     /**
-     * @return void
-     *
-     * @throws InvalidArgumentException
-     * @throws LogicException
-     * @throws RuntimeException
+     * @inheritdoc
      */
     public function open()
     {
     }
 
     /**
-     * @return void
-     *
-     * @throws LogicException
-     * @throws RuntimeException
+     * @inheritdoc
      */
     public function close()
     {
@@ -195,36 +222,28 @@ class BitBangingInterface
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getSpeed(): int
     {
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getFlags(): int
     {
     }
 
     /**
-     * @return bool True if SPI device connection is open
+     * @inheritdoc
      */
     public function isOpen(): bool
     {
     }
 
     /**
-     * Transfers data to SPI device.
-     * Simultaneously same byte count of data is read from the device and returned.
-     *
-     * @param string $data Data to send to device
-     *
-     * @return string data received by the SPI device
-     *
-     * @throws RuntimeException
-     * @throws LogicException
+     * @inheritdoc
      */
     public function transfer(string $data): string
     {

@@ -2,6 +2,7 @@
 namespace Volantus\BerrySpi\Tests;
 
 use Volantus\BerrySpi\RegularInterface;
+use Volantus\BerrySpi\SpiInterface;
 
 /**
  * Class RegularInterfaceTest
@@ -10,6 +11,12 @@ use Volantus\BerrySpi\RegularInterface;
  */
 class RegularInterfaceTest extends SpiInterfaceTestCase
 {
+    public function test_implements_spiInterface()
+    {
+        $interface = new RegularInterface(1, 32000, 0);
+        self::assertInstanceOf(SpiInterface::class, $interface);
+    }
+
     /**
      * @expectedException \Volantus\BerrySpi\InvalidArgumentException
      * @expectedExceptionMessage No negative values allowed for <channel> parameter

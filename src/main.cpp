@@ -13,7 +13,24 @@ extern "C" {
     PHPCPP_EXPORT void *get_module() 
     {
         static Php::Extension extension("berry-spi", "0.1.0");
+
+        Php::Interface spiInterfaceInterface("Volantus\\BerrySpi\\SpiInterface");
+
+        spiInterfaceInterface.method("open");
+        spiInterfaceInterface.method("close");
+        spiInterfaceInterface.method("transfer", {
+            Php::ByVal("data", Php::Type::String, true)
+        });
+        spiInterfaceInterface.method("getSpeed");
+        spiInterfaceInterface.method("getFlags");
+        spiInterfaceInterface.method("isOpen");
+
+        extension.add(spiInterfaceInterface);
+
+
         Php::Class<SpiRegularInterface> regularInterface("Volantus\\BerrySpi\\RegularInterface");
+        regularInterface.implements(spiInterfaceInterface);
+
         regularInterface.method<&SpiRegularInterface::__construct> ("__construct", {
             Php::ByVal("channel", Php::Type::Numeric, true),
             Php::ByVal("speed", Php::Type::Numeric, true),
@@ -39,6 +56,8 @@ extern "C" {
 
 
         Php::Class<SpiBitBangingInterface> bitBangingInterface("Volantus\\BerrySpi\\BitBangingInterface");
+        bitBangingInterface.implements(spiInterfaceInterface);
+
         bitBangingInterface.method<&SpiBitBangingInterface::__construct> ("__construct", {
             Php::ByVal("csPin", Php::Type::Numeric, true),
             Php::ByVal("misoPin", Php::Type::Numeric, true),
