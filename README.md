@@ -14,7 +14,7 @@ Deployment via official DEB repository is planned.
 Download the latest shared object and include it into php.ini:
 ```bash
 cd /usr/lib/php/$(php -v | grep -i 'PHP [57]' | cut -c1-8 | sed s/'PHP '//g | cut -c1-3)
-wget https://github.com/Volantus/berry-spi/releases/download/0.1.0/berry-spi.so
+wget https://github.com/Volantus/berry-spi/releases/download/0.2.0/berry-spi.so
 sudo echo "extension=berry-spi.so" >> /etc/php/7.0/cli/php.ini
 ```
 ## Compile from source
