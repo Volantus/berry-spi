@@ -8,7 +8,6 @@ int BerrySpiState::pigpioInitRc;
 void BerrySpiState::initDependencies()
 {
     pigpioInitRc = gpioInitialise();
-    freopen("/dev/null", "w", stderr);
 }
 
 void BerrySpiState::cleanDependencies()
