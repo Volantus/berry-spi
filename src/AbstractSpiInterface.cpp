@@ -3,7 +3,6 @@
 #include <pigpio.h>
 #include "BerrySpiState.hpp"
 #include "BerrySpiExceptions.hpp"
-#include "DeviceInteractionResult.hpp"
 #include "AbstractSpiInterface.hpp"
 
 bool AbstractSpiInterface::constructBaseParameters(int _speed, int _flags)
