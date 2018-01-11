@@ -174,6 +174,17 @@ class BitBangingInterfaceTest extends SpiInterfaceTestCase
     }
 
     /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Invalid data given => no negative values allowed
+     */
+    public function test_transfer_negative()
+    {
+        $this->interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $this->interface->open();
+        $this->interface->transfer([-1]);
+    }
+
+    /**
      * For this test GPIO16 (MISO) and GPIO20 (MOSI) pins needs to be connected (e.g. jumper cable)
      */
     public function test_transfer_dataSendIsRead()

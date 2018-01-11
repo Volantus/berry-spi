@@ -145,6 +145,17 @@ class RegularInterfaceTest extends SpiInterfaceTestCase
     }
 
     /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Invalid data given => no negative values allowed
+     */
+    public function test_transfer_negative()
+    {
+        $this->interface = new RegularInterface(1, 32000, 0);
+        $this->interface->open();
+        $this->interface->transfer([-1]);
+    }
+
+    /**
      * For this test SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) pins needs to be connected (e.g. jumper cable)
      */
     public function test_transfer_dataSendIsRead()
@@ -207,6 +218,17 @@ class RegularInterfaceTest extends SpiInterfaceTestCase
         $this->interface = new RegularInterface(1, 32000, 0);
         $this->interface->open();
         $this->interface->write([1024]);
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Invalid data given => no negative values allowed
+     */
+    public function test_write_negative()
+    {
+        $this->interface = new RegularInterface(1, 32000, 0);
+        $this->interface->open();
+        $this->interface->write([-1]);
     }
 
     public function test_getChannel_correct()
