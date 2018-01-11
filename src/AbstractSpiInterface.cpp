@@ -4,6 +4,7 @@
 #include "BerrySpiState.hpp"
 #include "BerrySpiExceptions.hpp"
 #include "AbstractSpiInterface.hpp"
+#include "TransmitBuffer.hpp"
 
 bool AbstractSpiInterface::constructBaseParameters(int _speed, int _flags)
 {
@@ -51,18 +52,21 @@ void AbstractSpiInterface::close()
 
 Php::Value AbstractSpiInterface::transfer(Php::Parameters &params)
 {
-    CHECK_IF_OPEN
+    CHECK_IF_OPEN(-1)
 
-    std::string data = params[0];
-    char * outBuffer = new char[data.size() + 1];
-    std::copy(data.begin(), data.end(), outBuffer);
-    outBuffer[data.size()] = '\0';
+    TransmitBuffer* txBuffer = new TransmitBuffer(params[0]);
+    if (!txBuffer->isValid()) {
+        delete txBuffer;
+        return false;
+    }
 
-    unsigned count = data.length();
-    char inBuffer[data.length()];
+    char rxBuffer[txBuffer->getLength() + 1];
 
-    int rc = crossTransfer(inBuffer, outBuffer, count);
-    return handleTransferResult(rc, (int) data.size(), count, inBuffer);
+    int rc = crossTransfer(rxBuffer, txBuffer->getData(), txBuffer->getWordCount());
+    Php::Value returnData = handleTransferResult(rc, txBuffer->getLength(), txBuffer->getWordCount(), rxBuffer);
+    delete txBuffer;
+
+    return returnData;
 }
 
 Php::Value AbstractSpiInterface::isOpen() const
@@ -74,7 +78,13 @@ Php::Value AbstractSpiInterface::handleTransferResult(int rc, int dataSize, unsi
 {
     if (validateTransfer(rc, transferCount)) {
         inBuffer[dataSize] = '\0';
-        return (char *) inBuffer;
+        Php::Value returnArray;
+
+        for (int i = 0; i < dataSize; i++) {
+            returnArray[i] = inBuffer[i];
+        }
+
+        return returnArray;
     }
 
     return false;

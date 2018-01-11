@@ -119,7 +119,29 @@ class RegularInterfaceTest extends SpiInterfaceTestCase
     public function test_transfer_notOpened()
     {
         $interface = new RegularInterface(1, 32000, 0);
-        $interface->transfer('abc');
+        $interface->transfer([1]);
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Invalid Parameter <data> given => unable to send empty data
+     */
+    public function test_transfer_empty()
+    {
+        $this->interface = new RegularInterface(1, 32000, 0);
+        $this->interface->open();
+        $this->interface->transfer([]);
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Invalid data given => only one byte per array item allowed
+     */
+    public function test_transfer_tooBig()
+    {
+        $this->interface = new RegularInterface(1, 32000, 0);
+        $this->interface->open();
+        $this->interface->transfer([1024]);
     }
 
     /**
@@ -129,9 +151,9 @@ class RegularInterfaceTest extends SpiInterfaceTestCase
     {
         $this->interface = new RegularInterface(1, 32000, 0);
         $this->interface->open();
-        $readData = $this->interface->transfer('abc');
+        $readData = $this->interface->transfer([4, 5, 6]);
 
-        self::assertEquals('abc', $readData, 'Check if SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) are connected properly');
+        self::assertEquals([4, 5, 6], $readData, 'Check if SPI_MISO (GPIO09) and SPI_MOSI (GPIO10) are connected properly');
     }
 
     /**
@@ -162,7 +184,29 @@ class RegularInterfaceTest extends SpiInterfaceTestCase
     public function test_write_noOpen()
     {
         $interface = new RegularInterface(1, 32000, 0);
-        $interface->write('abc');
+        $interface->write([1]);
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Invalid Parameter <data> given => unable to send empty data
+     */
+    public function test_write_empty()
+    {
+        $this->interface = new RegularInterface(1, 32000, 0);
+        $this->interface->open();
+        $this->interface->write([]);
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Invalid data given => only one byte per array item allowed
+     */
+    public function test_write_tooBig()
+    {
+        $this->interface = new RegularInterface(1, 32000, 0);
+        $this->interface->open();
+        $this->interface->write([1024]);
     }
 
     public function test_getChannel_correct()

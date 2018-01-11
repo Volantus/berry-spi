@@ -26,7 +26,7 @@ public:
 
     void __construct(Php::Parameters &params);
     Php::Value read(Php::Parameters &params);
-    int write(Php::Parameters &params);
+    void write(Php::Parameters &params);
     Php::Value getChannel() const;
 
     void open() {AbstractSpiInterface::open();};

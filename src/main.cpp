@@ -19,7 +19,7 @@ extern "C" {
         spiInterfaceInterface.method("open");
         spiInterfaceInterface.method("close");
         spiInterfaceInterface.method("transfer", {
-            Php::ByVal("data", Php::Type::String, true)
+            Php::ByVal("data", Php::Type::Array, true)
         });
         spiInterfaceInterface.method("getSpeed");
         spiInterfaceInterface.method("getFlags");
@@ -43,13 +43,13 @@ extern "C" {
         regularInterface.method<&SpiRegularInterface::open> ("open");
         regularInterface.method<&SpiRegularInterface::close> ("close");
         regularInterface.method<&SpiRegularInterface::transfer> ("transfer", {
-            Php::ByVal("data", Php::Type::String, true)
+            Php::ByVal("data", Php::Type::Array, true)
         });
         regularInterface.method<&SpiRegularInterface::read> ("read", {
             Php::ByVal("count", Php::Type::Numeric, true)
         });
-        regularInterface.method<&SpiRegularInterface::transfer> ("write", {
-            Php::ByVal("data", Php::Type::String, true)
+        regularInterface.method<&SpiRegularInterface::write> ("write", {
+            Php::ByVal("data", Php::Type::Array, true)
         });
 
         extension.add(std::move(regularInterface));
@@ -76,7 +76,7 @@ extern "C" {
         bitBangingInterface.method<&SpiBitBangingInterface::open> ("open");
         bitBangingInterface.method<&SpiBitBangingInterface::close> ("close");
         bitBangingInterface.method<&SpiBitBangingInterface::transfer> ("transfer", {
-            Php::ByVal("data", Php::Type::String, true)
+            Php::ByVal("data", Php::Type::Array, true)
         });
 
         extension.add(std::move(bitBangingInterface));

@@ -3,6 +3,7 @@
 #include <pigpio.h>
 #include "BerrySpiState.hpp"
 #include "BerrySpiExceptions.hpp"
+#include "TransmitBuffer.hpp"
 #include "AbstractSpiInterface.hpp"
 #include "SpiRegularInterface.hpp"
 
@@ -32,7 +33,7 @@ int SpiRegularInterface::crossTransfer(char* inBuffer, char* outBuffer, unsigned
 
 Php::Value SpiRegularInterface::read(Php::Parameters &params)
 {
-    CHECK_IF_OPEN
+    CHECK_IF_OPEN(-1);
 
     int _count = params[0];
     if (_count < 0) {
@@ -46,21 +47,20 @@ Php::Value SpiRegularInterface::read(Php::Parameters &params)
     return handleTransferResult(rc, count + 1, count, inBuffer);
 }
 
-int SpiRegularInterface::write(Php::Parameters &params)
+void SpiRegularInterface::write(Php::Parameters &params)
 {
-    CHECK_IF_OPEN
+    CHECK_IF_OPEN()
 
-    std::string data = params[0];
-    char * outBuffer = new char[data.size() + 1];
-    std::copy(data.begin(), data.end(), outBuffer);
-    outBuffer[data.size()] = '\0';
+    TransmitBuffer* txBuffer = new TransmitBuffer(params[0]);
+    if (!txBuffer->isValid()) {
+        delete txBuffer;
+        return;
+    }
+    char rxBuffer[0];
 
-    unsigned count = data.length();
-    char inBuffer[0];
-
-    int rc = spiWrite(handle, outBuffer, count);
-    handleTransferResult(rc, (int) data.size(), count, inBuffer);
-    return 1;
+    int rc = spiWrite(handle, txBuffer->getData(), txBuffer->getWordCount());
+    handleTransferResult(rc, txBuffer->getLength(), txBuffer->getWordCount(), rxBuffer);
+    delete txBuffer;
 }
 
 bool SpiRegularInterface::validateOpen(int returnCode)

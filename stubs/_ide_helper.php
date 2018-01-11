@@ -44,14 +44,15 @@ interface SpiInterface
      * Transfers data to SPI device.
      * Simultaneously same byte count of data is read from the device and returned.
      *
-     * @param string $data Data to send to device
+     * @param array $data Data to send to device
+     *                    (One word per array item)
      *
      * @return string data received by the SPI device
      *
      * @throws LogicException
      * @throws RuntimeException
      */
-    public function transfer(string $data): string;
+    public function transfer(array $data): string;
 }
 
 /**
@@ -121,7 +122,7 @@ class RegularInterface implements SpiInterface
     /**
      * @inheritdoc
      */
-    public function transfer(string $data): string
+    public function transfer(array $data): string
     {
     }
 
@@ -130,25 +131,25 @@ class RegularInterface implements SpiInterface
      *
      * @param int $count Count of bytes to read
      *
-     * @return string data read by the SPI device
+     * @return array data read by the SPI device
      *
      * @throws InvalidArgumentException
      * @throws LogicException
      * @throws RuntimeException
      */
-    public function read(int $count): string
+    public function read(int $count): array
     {
     }
 
     /**
      * Sends data to the SPI device
      *
-     * @param string $data
+     * @param array $data
      *
      * @throws LogicException
      * @throws RuntimeException
      */
-    public function write(string $data)
+    public function write(array $data)
     {
     }
 }
@@ -245,7 +246,7 @@ class BitBangingInterface implements SpiInterface
     /**
      * @inheritdoc
      */
-    public function transfer(string $data): string
+    public function transfer(array $data): string
     {
     }
 }

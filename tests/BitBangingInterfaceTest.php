@@ -148,7 +148,29 @@ class BitBangingInterfaceTest extends SpiInterfaceTestCase
     public function test_transfer_notOpened()
     {
         $interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
-        $interface->transfer('abc');
+        $interface->transfer([1]);
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Invalid Parameter <data> given => unable to send empty data
+     */
+    public function test_transfer_empty()
+    {
+        $this->interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $this->interface->open();
+        $this->interface->transfer([]);
+    }
+
+    /**
+     * @expectedException \Volantus\BerrySpi\InvalidArgumentException
+     * @expectedExceptionMessage Invalid data given => only one byte per array item allowed
+     */
+    public function test_transfer_tooBig()
+    {
+        $this->interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
+        $this->interface->open();
+        $this->interface->transfer([1024]);
     }
 
     /**
@@ -158,9 +180,9 @@ class BitBangingInterfaceTest extends SpiInterfaceTestCase
     {
         $this->interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
         $this->interface->open();
-        $readData = $this->interface->transfer('abc');
+        $readData = $this->interface->transfer([4, 5, 6]);
 
-        self::assertEquals('abc', $readData, 'Check if GPIO16 (MISO) and GPIO20 (MOSI) are connected properly');
+        self::assertEquals([4, 5, 6], $readData, 'Check if GPIO16 (MISO) and GPIO20 (MOSI) are connected properly');
     }
 
     public function test_getCsPin_correct()

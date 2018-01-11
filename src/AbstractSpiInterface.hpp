@@ -1,10 +1,10 @@
 #ifndef ABSTRACT_SPI_INTERFACE_H
 #define ABSTRACT_SPI_INTERFACE_H
 
-#define CHECK_IF_OPEN     if (handle == -1) {\
+#define CHECK_IF_OPEN(rv)   if (handle == -1) {\
                               BerrySpiExceptions::LogicException("Unable to transfer data via an unestablished device connection");\
-                              return -1;\
-                          }
+                              return rv;\
+                            }
 
 class AbstractSpiInterface: public Php::Base
 {
