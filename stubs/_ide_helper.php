@@ -45,14 +45,15 @@ interface SpiInterface
      * Simultaneously same byte count of data is read from the device and returned.
      *
      * @param array $data Data to send to device
-     *                    (One word per array item)
+     *                    (One word/byte per array item)
      *
-     * @return string data received by the SPI device
+     * @return array data received by the SPI device
+     *               (One word/byte per array item)
      *
      * @throws LogicException
      * @throws RuntimeException
      */
-    public function transfer(array $data): string;
+    public function transfer(array $data): array;
 }
 
 /**
@@ -122,7 +123,7 @@ class RegularInterface implements SpiInterface
     /**
      * @inheritdoc
      */
-    public function transfer(array $data): string
+    public function transfer(array $data): array
     {
     }
 
@@ -246,7 +247,7 @@ class BitBangingInterface implements SpiInterface
     /**
      * @inheritdoc
      */
-    public function transfer(array $data): string
+    public function transfer(array $data): array
     {
     }
 }
