@@ -42,10 +42,7 @@ use Volantus\BerrySpi\RegularInterface;
 
 $interface = new RegularInterface(1, 32768, 0);
 
-// Opening the connection
 $interface->open();
-
-// Don't forget to close the connection
 $interface->close();
 ```
 
@@ -79,8 +76,8 @@ $retrievedData = $interface->read(8);
 ### Just writing
 Sends the given bytes
 ```PHP
-// Just sending data
-$interface->write([1, 2, 3]);
+// Sending 3 bytes of data
+$interface->write([16, 12, 8]);
 ```
 
 ## Bit banging interface
@@ -92,10 +89,7 @@ use Volantus\BerrySpi\BitBangingInterface;
 
 $interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
 
-// Opening the connection
 $interface->open();
-
-// Don't forget to close the connection
 $interface->close();
 ```
 
