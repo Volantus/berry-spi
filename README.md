@@ -34,6 +34,9 @@ Communication is handled by the following classes
 * BitBangingInterface: In case of using any other GPIO pins
 
 ## Regular interface
+Don't forget to close connection before object gets deleted.
+Otherwise new connection could fail.
+### Opening/Closing the connection
 ```PHP
 use Volantus\BerrySpi\RegularInterface;
 
@@ -42,20 +45,11 @@ $interface = new RegularInterface(1, 32768, 0);
 // Opening the connection
 $interface->open();
 
-// Sending + retrieving data simustanisly
-$retrievedData = $interface->transfer(0x1269493);
-
-// Reading 8 bytes of data
-$retrievedData = $interface->read(8);
-    
-// Just sending data
-$interface->write('abc');
-
 // Don't forget to close the connection
 $interface->close();
 ```
 
-### Parameters
+#### Parameters
 The constructor accept three parameters
 
 | Parameter     | Description                                                                             |
@@ -65,7 +59,34 @@ The constructor accept three parameters
 |               | 32K-125M (values above 30M are unlikely to work)                                        |
 | flags         | Additional configuration, see [details](http://abyz.me.uk/rpi/pigpio/cif.html#spiOpen)  |
 
-### Bit banging interface
+
+### Cross transferring data
+Sending + retrieving data simultaneously. Same count of byte as send is read.
+Method accepts an array of words(bytes) to send.
+```PHP
+$retrievedData = $interface->transfer([1, 2, 3]);
+echo '1. received byte: ' . $retrievedData[0];
+echo '2. received byte: ' . $retrievedData[1];
+echo '3. received byte: ' . $retrievedData[2];
+```
+### Just reading
+Reads given count of bytes
+```PHP
+// Reading 8 bytes of data
+$retrievedData = $interface->read(8);
+```
+
+### Just writing
+Sends the given bytes
+```PHP
+// Just sending data
+$interface->write([1, 2, 3]);
+```
+
+## Bit banging interface
+Don't forget to close connection before object gets deleted.
+Otherwise new connection could fail.
+### Opening/Closing the connection
 ```PHP
 use Volantus\BerrySpi\BitBangingInterface;
 
@@ -74,14 +95,11 @@ $interface = new BitBangingInterface(12, 16, 20, 21, 512, 0);
 // Opening the connection
 $interface->open();
 
-// Sending + retrieving data simustanisly
-$retrievedData = $interface->transfer(0x1269493);
-
 // Don't forget to close the connection
 $interface->close();
 ```
 
-### Parameters
+#### Parameters
 The constructor accept three parameters
 
 | Parameter     | Description                                                                              |
@@ -97,6 +115,17 @@ The constructor accept three parameters
 *¹ This pin has to be unique for each device
 
 *² This pin can be shared with multiple slave devices, if no parallel data transfer is required
+
+
+### Cross transferring data
+Sending + retrieving data simultaneously. Same count of byte as send is read.
+Method accepts an array of words(bytes) to send.
+```PHP
+$retrievedData = $interface->transfer([1, 2, 3]);
+echo '1. received byte: ' . $retrievedData[0];
+echo '2. received byte: ' . $retrievedData[1];
+echo '3. received byte: ' . $retrievedData[2];
+```
 
 ## Error handling
 All errors are wrapped in exceptions within the namespace Volantus\BerrySpi.
