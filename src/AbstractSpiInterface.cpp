@@ -81,7 +81,9 @@ Php::Value AbstractSpiInterface::handleTransferResult(int rc, int dataSize, unsi
         Php::Value returnArray;
 
         for (int i = 0; i < dataSize; i++) {
-            returnArray[i] = inBuffer[i];
+            unsigned unsignedItem = inBuffer[i];
+            int signedItem = unsignedItem;
+            returnArray[i] = signedItem;
         }
 
         return returnArray;
