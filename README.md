@@ -33,6 +33,22 @@ Communication is handled by the following classes
 * RegularInterface: In case of using the native SPI pins (GPIO 07 - 11)
 * BitBangingInterface: In case of using any other GPIO pins
 
+## Initialization
+Before creation of any SpiInterface instance, static initialization method needs to be called once (for the process lifetime) to initialize Pigpio library.
+Returns TRUE on success and FALSE on failure.
+
+Please note that initialization takes around **200ms** to execute on Raspberry Pi 3.
+
+*Gets called automatically on first instantiation if not called before.*
+```PHP
+use Volantus\BerrySpi\RegularInterface;
+use Volantus\BerrySpi\BitBangingInterface;
+
+RegularInterface::initialize();
+// OR
+BitBangingInterface::initialize();
+```
+
 ## Regular interface
 Don't forget to close connection before object gets deleted.
 Otherwise new connection could fail.
