@@ -55,6 +55,9 @@ public:
     /* Constructs and validates the base parameters */
     bool constructBaseParameters(int _speed, int _flags);
 
+    /* Initializes the Pigpio library */
+    static Php::Value initialize();
+
     /* Abstracted API function for opening the device, will call openDevice */
     void open();
 
@@ -64,6 +67,7 @@ public:
     /* Abstracted API function for cross transfer, will call crossTransfer */
     Php::Value transfer(Php::Parameters &params);
 
+    static Php::Value isInitialized();
     Php::Value getSpeed() const;
     Php::Value getFlags() const;
     Php::Value isOpen() const;

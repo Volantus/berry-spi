@@ -8,7 +8,6 @@ namespace Volantus\BerrySpi;
  */
 interface SpiInterface
 {
-
     /**
      * @return void
      *
@@ -54,6 +53,22 @@ interface SpiInterface
      * @throws RuntimeException
      */
     public function transfer(array $data): array;
+
+    /**
+     * Initializes Pigpio dependencies
+     * Needs to be called before creating a SpiInterface instances
+     * Gets called automatically on first instantiation if not called before
+     *
+     * This function takes around 200ms to execute on a Rpi3
+     *
+     * @return bool Returns TRUE on success, FALSE on failure
+     */
+    public static function initialize() : bool;
+
+    /**
+     * @return bool
+     */
+    public static function isInitialized() : bool;
 }
 
 /**
@@ -153,6 +168,20 @@ class RegularInterface implements SpiInterface
     public function write(array $data)
     {
     }
+
+    /**
+     * @inheritdoc
+     */
+    public static function initialize(): bool
+    {
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function isInitialized(): bool
+    {
+    }
 }
 
 /**
@@ -248,6 +277,20 @@ class BitBangingInterface implements SpiInterface
      * @inheritdoc
      */
     public function transfer(array $data): array
+    {
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function initialize(): bool
+    {
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function isInitialized(): bool
     {
     }
 }

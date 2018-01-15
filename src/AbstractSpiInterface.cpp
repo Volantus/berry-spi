@@ -6,6 +6,17 @@
 #include "AbstractSpiInterface.hpp"
 #include "TransmitBuffer.hpp"
 
+Php::Value AbstractSpiInterface::initialize()
+{
+    BerrySpiState::initDependencies();
+    return BerrySpiState::getPigpioInitRc() >= 0;
+}
+
+Php::Value AbstractSpiInterface::isInitialized()
+{
+    return BerrySpiState::isInitialized();
+}
+
 bool AbstractSpiInterface::constructBaseParameters(int _speed, int _flags)
 {
     if (_speed < 0) {BerrySpiExceptions::InvalidArgumentException("No negative values allowed for <speed> parameter"); return false;}
@@ -14,6 +25,10 @@ bool AbstractSpiInterface::constructBaseParameters(int _speed, int _flags)
     speed = _speed;
     flags = _flags;
     handle = -1;
+
+    if (!BerrySpiState::isInitialized()) {
+        BerrySpiState::initDependencies();
+    }
 
     if (BerrySpiState::getPigpioInitRc() < 0) {
         std::string message = "Pigpio initialization failed with RC=";

@@ -16,11 +16,13 @@ extern "C" {
 
         Php::Interface spiInterfaceInterface("Volantus\\BerrySpi\\SpiInterface");
 
+        spiInterfaceInterface.method("initialize", Php::Static);
         spiInterfaceInterface.method("open");
         spiInterfaceInterface.method("close");
         spiInterfaceInterface.method("transfer", {
             Php::ByVal("data", Php::Type::Array, true)
         });
+        spiInterfaceInterface.method("isInitialized", Php::Static);
         spiInterfaceInterface.method("getSpeed");
         spiInterfaceInterface.method("getFlags");
         spiInterfaceInterface.method("isOpen");
@@ -40,6 +42,8 @@ extern "C" {
         regularInterface.method<&SpiRegularInterface::getSpeed> ("getSpeed");
         regularInterface.method<&SpiRegularInterface::getFlags> ("getFlags");
         regularInterface.method<&SpiRegularInterface::isOpen> ("isOpen");
+        regularInterface.method<&SpiRegularInterface::isInitialized> ("isInitialized");
+        regularInterface.method<&SpiRegularInterface::initialize> ("initialize");
         regularInterface.method<&SpiRegularInterface::open> ("open");
         regularInterface.method<&SpiRegularInterface::close> ("close");
         regularInterface.method<&SpiRegularInterface::transfer> ("transfer", {
@@ -73,6 +77,8 @@ extern "C" {
         bitBangingInterface.method<&SpiBitBangingInterface::getSpeed> ("getSpeed");
         bitBangingInterface.method<&SpiBitBangingInterface::getFlags> ("getFlags");
         bitBangingInterface.method<&SpiBitBangingInterface::isOpen> ("isOpen");
+        bitBangingInterface.method<&SpiRegularInterface::isInitialized> ("isInitialized");
+        bitBangingInterface.method<&SpiBitBangingInterface::initialize> ("initialize");
         bitBangingInterface.method<&SpiBitBangingInterface::open> ("open");
         bitBangingInterface.method<&SpiBitBangingInterface::close> ("close");
         bitBangingInterface.method<&SpiBitBangingInterface::transfer> ("transfer", {
@@ -82,7 +88,7 @@ extern "C" {
         extension.add(std::move(bitBangingInterface));
 
         extension.onStartup([]() {
-            BerrySpiState::initDependencies();
+            BerrySpiState::startup();
             BerrySpiExceptions::prepare();
         });
 

@@ -17,6 +17,12 @@ class BitBangingInterfaceTest extends SpiInterfaceTestCase
         self::assertInstanceOf(SpiInterface::class, $interface);
     }
 
+    public function test_initialize_true()
+    {
+        self::assertTrue(BitBangingInterface::initialize());
+        self::assertTrue(BitBangingInterface::isInitialized());
+    }
+
     /**
      * @expectedException \Volantus\BerrySpi\InvalidArgumentException
      * @expectedExceptionMessage No negative values allowed for <csPin> parameter
