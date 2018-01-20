@@ -12,7 +12,7 @@ extern "C" {
      */
     PHPCPP_EXPORT void *get_module() 
     {
-        static Php::Extension extension("berry-spi", "0.2.0");
+        static Php::Extension extension("berry-spi", "0.4.1");
 
         Php::Interface spiInterfaceInterface("Volantus\\BerrySpi\\SpiInterface");
 

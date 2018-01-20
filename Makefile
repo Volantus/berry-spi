@@ -39,7 +39,7 @@ LINKER				=	g++
 #	Compiler and linker flags
 #
 
-COMPILER_FLAGS		=	-Wall -I/usr/local/src/php-7.0 -I/usr/local/src/php-7.0/main -I/usr/local/src/php-7.0/Zend -I/usr/local/src/php-7.0/TSRM -c -O2 -std=c++11 -fpic -o
+COMPILER_FLAGS		=	-Wall -I/usr/local/src/php -I/usr/local/src/php/main -I/usr/local/src/php/Zend -I/usr/local/src/php/TSRM -c -O2 -std=c++11 -fpic -o
 LINKER_FLAGS		=	-shared
 LINKER_DEPENDENCIES	=	-lpigpio -lphpcpp
 

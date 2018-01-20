@@ -7,14 +7,21 @@ Extension is still in alpha state. Please don't hesitate to report bugs, make su
 The extension uses the great [pigpio library](http://abyz.me.uk/rpi/pigpio/index.html) and is build on top of [PHP-CPP](http://www.php-cpp.com/).
 
 # Installation
-For the moment only PHP 7.0 is tested. As soon we reach BETA status, backports will be created.
-Deployment via official DEB repository is planned.
-
-## Precompiled release 
-Download the latest shared object and include it into php.ini:
+## DEB repository
+The easies way for keeping the extension up2date on the latest stable release.
+```bash
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BB761EA8
+echo "deb https://deb.berry.volantus.org/ stretch main" | sudo tee -a /etc/apt/sources.list.d/volantus-berry.list
+sudo apt-get update
+# Choose your PHP version:
+sudo apt-get install php7.0-berry-spi
+sudo apt-get install php7.1-berry-spi
+```
+## Precompiled release (shared object)
+Download the latest shared object (Replace the x chars by release and PHP version) and include it into php.ini:
 ```bash
 cd /usr/lib/php/$(php -v | grep -i 'PHP [57]' | cut -c1-8 | sed s/'PHP '//g | cut -c1-3)
-wget https://github.com/Volantus/berry-spi/releases/download/0.2.0/berry-spi.so
+wget -O berry-spi.so https://github.com/Volantus/berry-spi/releases/download/x.x.x/php-x.x-berry-spi.so
 sudo echo "extension=berry-spi.so" >> /etc/php/7.0/cli/php.ini
 ```
 ## Compile from source
