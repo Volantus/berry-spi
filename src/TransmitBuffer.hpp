@@ -11,6 +11,7 @@ private:
 
 public:
     TransmitBuffer(Php::Value phpData);
+    ~TransmitBuffer();
 
     unsigned getWordCount();
     int getLength();

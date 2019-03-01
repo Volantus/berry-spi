@@ -40,6 +40,13 @@ TransmitBuffer::TransmitBuffer(Php::Value phpData)
     this->valid = true;
 }
 
+TransmitBuffer::~TransmitBuffer()
+{
+    if (this->length > 0) {
+        delete[] this->data;
+    }
+}
+
 unsigned TransmitBuffer::getWordCount()
 {
     return wordCount;
