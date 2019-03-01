@@ -7,16 +7,6 @@ Extension is still in alpha state. Please don't hesitate to report bugs, make su
 The extension uses the great [pigpio library](http://abyz.me.uk/rpi/pigpio/index.html) and is build on top of [PHP-CPP](http://www.php-cpp.com/).
 
 # Installation
-## DEB repository
-The easies way for keeping the extension up2date on the latest stable release.
-```bash
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BB761EA8
-echo "deb https://deb.berry.volantus.org/ stretch main" | sudo tee -a /etc/apt/sources.list.d/volantus-berry.list
-sudo apt-get update
-# Choose your PHP version:
-sudo apt-get install php7.0-berry-spi
-sudo apt-get install php7.1-berry-spi
-```
 ## Precompiled release (shared object)
 Download the latest shared object (Replace the x chars by release and PHP version) and include it into php.ini:
 ```bash
