@@ -3,6 +3,11 @@ Native PHP extension for SPI communication on RaspberryPi.
 
 Extension is still in alpha state. Please don't hesitate to report bugs, make suggestions or ask questions.
 
+:bangbang: **Issue with PHP >= 7.3**
+
+Due to a [open bug in PHP-CPP](CopernicaMarketingSoftware/PHP-CPP#407) the extension is currently not working for PHP >= 7.3.
+
+
 # Credits
 The extension uses the great [pigpio library](http://abyz.me.uk/rpi/pigpio/index.html) and is build on top of [PHP-CPP](http://www.php-cpp.com/).
 
