@@ -20,6 +20,13 @@ EXTENSION_DIR		=	$(shell php-config --extension-dir)
 
 
 #
+#	The include dirs
+#
+
+INCLUDE_DIR			=	$(shell php-config --include-dir)
+
+
+#
 #	The name of the extension and the name of the .ini file
 #
 
@@ -39,7 +46,7 @@ LINKER				=	g++
 #	Compiler and linker flags
 #
 
-COMPILER_FLAGS		=	-Wall -I/usr/local/src/php -I/usr/local/src/php/main -I/usr/local/src/php/Zend -I/usr/local/src/php/TSRM -c -O2 -std=c++11 -fpic -o
+COMPILER_FLAGS		=	-Wall -I${INCLUDE_DIR} -I${INCLUDE_DIR}/main -I${INCLUDE_DIR}/Zend -I${INCLUDE_DIR}/TSRM -c -O2 -std=c++11 -fpic -o
 LINKER_FLAGS		=	-shared
 LINKER_DEPENDENCIES	=	-lpigpio -lphpcpp
 
